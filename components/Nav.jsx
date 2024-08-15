@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 
 const Nav = () => {
   const isUserLoggedIn = true
-  const isUserAdmin = true
+  // const isUserAdmin = true
 
   return (
     <nav className="flex-between w-full mb-16 pt-3">
@@ -30,19 +30,19 @@ const Nav = () => {
             <Link href="/avaliar" className="black_btn">
               Avaliar
             </Link>
-          </div> 
-        ): (
-          <>
 
-          </>
-        )}
-      </div>
+            <button type="button"  className="outline_btn">
+              Sair
+            </button>
 
-      <div className="sm:flex hidden">
-        {isUserAdmin ? (
-          <div className="flex gap-3 md:gap-5">
-            <Link href="/criar-cardapio" className="black_btn">
-              Criar Cardapio
+            <Link href="/profile">
+              <Image 
+                src="/assets/images/logo.svg"
+                alt="profile"
+                width={37}
+                height={37}
+                className="rounded-full"
+              />
             </Link>
           </div> 
         ): (
@@ -51,7 +51,8 @@ const Nav = () => {
           </>
         )}
       </div>
-
+        
+      
       {/* Mobile Navigation */}
 
     </nav>

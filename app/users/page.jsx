@@ -19,7 +19,6 @@ const Usuarios = () => {
             .catch((err) => console.log(err));
     }, [url]);
 
-
     function novosDados() {
         setTipo("novo");
     }
@@ -133,7 +132,7 @@ const Usuarios = () => {
                                 {item.id} - {item.nome} - {item.email}{" "}
                                 <img
                                     alt="Editar"
-                                    src="/assets/images/copy.svg"
+                                    src="/assets/icons/copy.svg"
                                     id={item.id}
                                     height={20}
                                     width={20}
@@ -141,7 +140,7 @@ const Usuarios = () => {
                                 />
                                 <img
                                     alt="Apagar"
-                                    src="/assets/images/copy.svg"
+                                    src="/assets/icons/lixeira.svg"
                                     id={item.id}
                                     height={20}
                                     width={20}

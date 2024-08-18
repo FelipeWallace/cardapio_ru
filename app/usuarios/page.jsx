@@ -90,8 +90,12 @@ const Usuarios = () => {
     }
 
     return (
-        <div>
-            <button type="button" onClick={novosDados}>
+        <div className="p-6 font-sans">
+            <button 
+                type="button" 
+                onClick={novosDados}
+                className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700"
+            >
                 Novo
             </button>
             {tipo ? (
@@ -99,23 +103,35 @@ const Usuarios = () => {
                     <input
                         type="text"
                         name="txtNome"
+                        placeholder="Nome"
                         value={nome}
                         onChange={(e) => {
                             setNome(e.target.value);
                         }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
                     <input
                         type="text"
                         name="txtEmail"
+                        placeholder="Email"
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
                         }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
-                    <button type="button" onClick={limparDados}>
+                    <button 
+                        type="button" 
+                        onClick={limparDados}
+                        className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700 mr-2"
+                    >
                         Cancelar
                     </button>
-                    <button type="button" onClick={gravaDados}>
+                    <button 
+                        type="button" 
+                        onClick={gravaDados}
+                        className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700"
+                    >
                         Gravar
                     </button>
                 </>
@@ -126,8 +142,8 @@ const Usuarios = () => {
             {usuarios
                 ? usuarios.map((item) => {
                     return (
-                        <div key={item.id}>
-                            <div>
+                        <div key={item.id} className="flex items-center justify-between p-2 mt-4 border-b">
+                            <div className="flex items-center">
                                 {" "}
                                 {item.id} - {item.nome} - {item.email}{" "}
                                 <img
@@ -136,6 +152,7 @@ const Usuarios = () => {
                                     id={item.id}
                                     height={20}
                                     width={20}
+                                    className="h-5 w-5 cursor-pointer hover:scale-110 transition-transform"
                                     onClick={(e) => editarDados(item.id)}
                                 />
                                 <img
@@ -144,6 +161,7 @@ const Usuarios = () => {
                                     id={item.id}
                                     height={20}
                                     width={20}
+                                    className="h-5 w-5 cursor-pointer hover:scale-110 transition-transform ml-4"
                                     onClick={(e) => apagarDados(item.id)}
                                 />
                             </div>

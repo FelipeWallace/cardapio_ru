@@ -32,8 +32,9 @@ const Cardapio = () => {
 
     function editarDados(cod) {
         let cardapio = cardapio.find((item) => item.id === cod);
-        const { data, refeicao, titulo } = cardapio;
+        const { id, data, refeicao, titulo } = cardapio;
         setTipo("editar");
+        setId(id);
         setData(data);
         setRefeicao(refeicao);
         setTitulo(titulo);
@@ -47,8 +48,8 @@ const Cardapio = () => {
     }
 
     function atualizaListaComNovoCardapio(response) {
-        let { data, refeicao, titulo } = response.data;
-        let obj = { data: data, refeicao: refeicao, titulo: titulo };
+        let { id, data, refeicao, titulo } = response.data;
+        let obj = { ii: id, data: data, refeicao: refeicao, titulo: titulo };
         let card = cardapio;
         card.push(obj);
         setCardapio(card);
@@ -95,7 +96,11 @@ const Cardapio = () => {
 
     return (
         <div>
-            <button type="button" onClick={novosDados}>
+            <button 
+                type="button" 
+                onClick={novosDados}
+                className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700"
+            >
                 Novo
             </button>
             {tipo ? (
@@ -107,27 +112,40 @@ const Cardapio = () => {
                         onChange={(e) => {
                             setNome(e.target.value);
                         }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
                     <input
                         type="text"
                         name="txtRefeicao"
+                        placeholder="Refeição"
                         value={refeicao}
                         onChange={(e) => {
                             setRefeicao(e.target.value);
                         }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
                     <input
                         type="text"
                         name="txtTitulo"
+                        placeholder="Título"
                         value={titulo}
                         onChange={(e) => {
                             setTitulo(e.target.value);
                         }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
-                    <button type="button" onClick={limparDados}>
+                    <button 
+                        type="button" 
+                        onClick={limparDados}
+                        className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700 mr-2"
+                    >
                         Cancelar
                     </button>
-                    <button type="button" onClick={gravaDados}>
+                    <button 
+                        type="button" 
+                        onClick={gravaDados}
+                        className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700"
+                    >
                         Gravar
                     </button>
                 </>

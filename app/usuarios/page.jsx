@@ -8,6 +8,8 @@ const Usuarios = () => {
     const [id, setId] = useState("");
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [perfil, setPerfil] = useState("");
     const [tipo, setTipo] = useState("");
 
     const url = "https://restaurante-api-swart.vercel.app/";
@@ -26,16 +28,20 @@ const Usuarios = () => {
         setId("");
         setNome("");
         setEmail("");
+        setSenha("");
+        setPerfil("");
         setTipo("");
     }
 
     function editarDados(cod) {
         let usuario = usuarios.find((item) => item.id === cod);
-        const { id, nome, email } = usuario;
+        const { id, nome, email, senha, perfil } = usuario;
         setTipo("editar");
         setId(id);
         setNome(nome);
         setEmail(email);
+        setSenha(senha);
+        setPerfil(perfil);
     }
 
     function apagarDados(cod) {
@@ -46,8 +52,8 @@ const Usuarios = () => {
     }
 
     function atualizaListaComNovoUsuario(response) {
-        let { id, nome, email } = response.data;
-        let obj = { id: id, nome: nome, email: email };
+        let { id, nome, email, senha, perfil } = response.data;
+        let obj = { id: id, nome: nome, email: email, senha: senha, perfil: perfil };
         let users = usuarios;
         users.push(obj);
         setUsuarios(users);
@@ -60,17 +66,21 @@ const Usuarios = () => {
         let users = usuarios;
         users[index].nome = nome;
         users[index].email = email;
+        users[index].senha = senha;
+        users[index].perfil = perfil;
         setUsuarios(users);
         limparDados("");
     }
 
     function gravaDados() {
-        if (nome !== "" && email !== "") {
+        if (nome !== "" && email !== "" && senha !== "") {
             if (tipo === "novo") {
                 axios
                     .post(url + "usuarios", {
                         nome: nome,
                         email: email,
+                        senha: senha,
+                        perfil: "cliente",
                     })
                     .then((response) => atualizaListaComNovoUsuario(response))
                     .catch((err) => console.log(err));
@@ -80,6 +90,8 @@ const Usuarios = () => {
                         id: id,
                         nome: nome,
                         email: email,
+                        senha: senha,
+                        perfil: "cliente",
                     })
                     .then((response) => atualizaListaUsuarioEditado(response))
                     .catch((err) => console.log(err));
@@ -117,6 +129,16 @@ const Usuarios = () => {
                         value={email}
                         onChange={(e) => {
                             setEmail(e.target.value);
+                        }}
+                        className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
+                    />
+                    <input
+                        type="password"
+                        name="txtSenha"
+                        placeholder="Senha"
+                        value={senha}
+                        onChange={(e) => {
+                            setSenha(e.target.value);
                         }}
                         className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />

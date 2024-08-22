@@ -188,7 +188,7 @@ const Usuarios = () => {
                                     height={20}
                                     width={20}
                                     className="h-5 w-5 cursor-pointer hover:scale-110 transition-transform ml-4"
-                                    onClick={(e) => apagarDados(item.id)}
+                                    onClick={() => apagarDados(item.id)}
                                 />
                             </div>
                         </div>

@@ -6,7 +6,7 @@ import axios from "axios";
 const Cardapio = () => {
     const [cardapio, setCardapio] = useState([]);
     const [id, setId] = useState("");
-    const [data, setData] = useState("");
+    const [data, setData] = useState(null);
     const [refeicao, setRefeicao] = useState("");
     const [titulo, setTitulo] = useState("");
     const [tipo, setTipo] = useState("");
@@ -25,7 +25,7 @@ const Cardapio = () => {
     }
     function limparDados() {
         setId("");
-        setData("");
+        setData(null);
         setRefeicao("");
         setTitulo("");
     }
@@ -68,7 +68,7 @@ const Cardapio = () => {
     }
 
     function gravaDados() {
-        if (data !== "" && refeicao !== "" && titulo !== "") {
+        if (data !== null && refeicao !== "" && titulo !== "") {
             if (tipo === "novo") {
                 axios
                     .post(url + "cardapio", {
@@ -110,7 +110,7 @@ const Cardapio = () => {
                         name="txtData"
                         value={data}
                         onChange={(e) => {
-                            setNome(e.target.value);
+                            setData(e.target.value);
                         }}
                         className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
@@ -152,14 +152,18 @@ const Cardapio = () => {
             ) : (
                 false
             )}
-
+            {/* 
+                - Não está indexando mas é possível criar um novo
+                - Esta salvando a data do dia anterior
+                - Como cadastrar os pratos dentro de um cardapio?
+            */}
             {cardapio
                 ? cardapio.map((item) => {
                     return (
                         <div key={item.id}>
                             <div>
                                 {" "}
-                                {item.id} - {item.data} - {item.refeicao} - {item.titulo}{" "}
+                                {item.id} - {new Date(item.data).toLocaleDateString("pt-BR")} - {item.refeicao} - {item.titulo}{" "}
                                 <img
                                     alt="Editar"
                                     src="/assets/icons/copy.svg"

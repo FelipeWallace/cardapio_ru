@@ -16,7 +16,7 @@ const Cardapio = () => {
     useEffect(() => {
         fetch(url + "cardapio")
             .then((response) => response.json())
-            .then((data) => setUsuarios(data))
+            .then((data) => setCardapio(data))
             .catch((err) => console.log(err));
     }, [url]);
 
@@ -154,7 +154,6 @@ const Cardapio = () => {
             )}
             {/* 
                 - Não está indexando mas é possível criar um novo
-                - Esta salvando a data do dia anterior
                 - Como cadastrar os pratos dentro de um cardapio?
             */}
             {cardapio
@@ -163,14 +162,14 @@ const Cardapio = () => {
                         <div key={item.id}>
                             <div>
                                 {" "}
-                                {item.id} - {new Date(item.data).toLocaleDateString("pt-BR")} - {item.refeicao} - {item.titulo}{" "}
+                                {item.id} - {new Date(item.data).toLocaleDateString()} - {item.refeicao} - {item.titulo}{" "}
                                 <img
                                     alt="Editar"
                                     src="/assets/icons/copy.svg"
                                     id={item.id}
                                     height={20}
                                     width={20}
-                                    onClick={(e) => editarDados(item.id)}
+                                    onClick={() => editarDados(item.id)}
                                 />
                                 <img
                                     alt="Apagar"
@@ -178,7 +177,7 @@ const Cardapio = () => {
                                     id={item.id}
                                     height={20}
                                     width={20}
-                                    onClick={(e) => apagarDados(item.id)}
+                                    onClick={() => apagarDados(item.id)}
                                 />
                             </div>
                         </div>

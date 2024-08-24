@@ -175,12 +175,8 @@ const Usuarios = () => {
                                     height={20}
                                     width={20}
                                     className="h-5 w-5 cursor-pointer hover:scale-110 transition-transform"
-                                    onClick={(e) => editarDados(item.id)}
+                                    onClick={() => editarDados(item.id)}
                                 />
-                                {/* 
-                                    - Exibe erro ao apagar, mas ainda sim apaga os itens criados pelo front
-                                    - Apaga na primeira tentaiva, depois não apaga itens adicionados diretamente no banco, via Postman
-                                */}
                                 <img
                                     alt="Apagar"
                                     src="/assets/icons/lixeira.svg"

@@ -5,7 +5,7 @@ const Home = () => {
         <h1 className="head_text text-center">
             Restaurante Universitário da Unifei
            <br className="max-md:hidden" />
-           <span className="orange_gradient text-center">Cardapio do dia  {/* data */}</span>
+           <span className="orange_gradient text-center">Cardápio do dia  {/* data */}</span>
         </h1>
         <p className="desc text-center">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. 

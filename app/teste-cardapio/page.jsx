@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const menu = {
     Monday: ['Pasta', 'Salad', 'Soup'],
@@ -16,6 +16,17 @@ const daysOfWeek = Object.keys(menu);
 
 export default function MenuCarousel() {
     const [selectedDay, setSelectedDay] = useState(daysOfWeek[0]);
+
+    // Função para obter o dia da semana atual
+    const getCurrentDay = () => {
+        const today = new Date();
+        const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        return daysOfWeek[dayIndex === 0 ? 6 : dayIndex - 1]; // Ajusta Sunday para ser o último item
+    };
+
+    useEffect(() => {
+        setSelectedDay(getCurrentDay());
+    }, []);
 
     const handleNextDay = () => {
         const currentIndex = daysOfWeek.indexOf(selectedDay);
@@ -41,7 +52,7 @@ export default function MenuCarousel() {
                 >
                     Anterior
                 </button>
-                <span className="text-xl font-semibold marg">{selectedDay}</span>
+                <span className="text-xl font-semibold">{selectedDay}</span>
                 <button 
                     onClick={handleNextDay} 
                     className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"

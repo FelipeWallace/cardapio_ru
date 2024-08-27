@@ -49,7 +49,7 @@ const Cardapio = () => {
 
     function atualizaListaComNovoCardapio(response) {
         let { id, data, refeicao, titulo } = response.data;
-        let obj = { ii: id, data: data, refeicao: refeicao, titulo: titulo };
+        let obj = { id: id, data: data, refeicao: refeicao, titulo: titulo };
         let card = cardapio;
         card.push(obj);
         setCardapio(card);
@@ -153,16 +153,18 @@ const Cardapio = () => {
                 false
             )}
             {/* 
-                - Não está indexando mas é possível criar um novo
+                - Não é possível editar
                 - Como cadastrar os pratos dentro de um cardapio?
             */}
-            {cardapio
-                ? cardapio.map((item) => {
-                    return (
-                        <div key={item.id}>
+
+            {cardapio && cardapio.length > 0 ? (
+                cardapio.map((item) => (
+                    <div key={item.id} className="mb-6">
+                        <div className="flex items-center justify-between mb-2">
                             <div>
-                                {" "}
-                                {item.id} - {new Date(item.data).toLocaleDateString()} - {item.refeicao} - {item.titulo}{" "}
+                                {item.id} - {new Date(item.data).toLocaleDateString('pt-BR')} - {item.refeicao} - {item.titulo}
+                            </div>
+                            <div className="flex space-x-2">
                                 <img
                                     alt="Editar"
                                     src="/assets/icons/copy.svg"
@@ -170,6 +172,7 @@ const Cardapio = () => {
                                     height={20}
                                     width={20}
                                     onClick={() => editarDados(item.id)}
+                                    className="cursor-pointer"
                                 />
                                 <img
                                     alt="Apagar"
@@ -178,12 +181,36 @@ const Cardapio = () => {
                                     height={20}
                                     width={20}
                                     onClick={() => apagarDados(item.id)}
+                                    className="cursor-pointer"
                                 />
                             </div>
                         </div>
-                    );
-                })
-                : false}
+                        {item.itens && item.itens.length > 0 ? (
+                            <ul className="ml-4 list-disc">
+                                {item.itens.map((subItem) => (
+                                    <li key={subItem.id} className="mb-2">
+                                        <div className="flex items-center">
+                                            <img
+                                                src={subItem.imagem_url}
+                                                alt={subItem.nome}
+                                                className="h-10 w-10 rounded-full mr-3"
+                                            />
+                                            <div>
+                                                <strong>{subItem.nome}</strong>
+                                                <p className="text-gray-600">{subItem.descricao}</p>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
+                        )}
+                    </div>
+                ))
+            ) : (
+                <p>Nenhum cardápio encontrado.</p>
+            )}
         </div>
     );
 

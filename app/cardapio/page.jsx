@@ -11,7 +11,8 @@ const Cardapio = () => {
     const [titulo, setTitulo] = useState("");
     const [tipo, setTipo] = useState("");
 
-    const url = "https://restaurante-api-swart.vercel.app/";
+    //const url = "https://restaurante-api-swart.vercel.app/";
+    const url = "http://localhost:9081/";
 
     useEffect(() => {
         fetch(url + "cardapio")

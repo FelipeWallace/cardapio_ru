@@ -8,7 +8,7 @@ const Home = () => {
         <h1 className="head_text text-center">
             Restaurante Universitário da Unifei
            <br className="max-md:hidden" />
-           <span className="orange_gradient text-center">Cardápio de {today.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' })}</span>
+           <span className="orange_gradient text-center">Cardápio de {today.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}</span>
         </h1>
         <p className="desc text-center">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. 

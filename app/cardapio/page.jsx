@@ -21,6 +21,33 @@ const Cardapio = () => {
             .catch((err) => console.log(err));
     }, [url]);
 
+    // testes requisição de itens
+    //---------------------------------------------------------
+    
+   const [itensPorCardapio, setItensPorCardapio] = useState({});
+
+    // useEffect(() => {
+    //     fetch(url + `cardapio/${cardapioId}/itens`)
+    //         .then((response) => response.json())
+    //         .then((data) => setItensPorCardapio(data))
+    //         .catch((err) => console.log(err));
+    // }, [url]);
+    
+    const fetchItens = async (cardapioId) => {
+        try {
+            const response = await fetch(url + `cardapio/${cardapioId}/itens`);
+            const data = await response.json();
+            setItensPorCardapio((prev) => ({ ...prev, [cardapioId]: data }));
+        } catch (error) {
+            console.error("Erro ao buscar itens:", error);
+        }
+    };
+
+    useEffect(() => {
+        cardapio.forEach(item => fetchItens(item.id));
+    }, [cardapio]);
+   //---------------------------------------------------------
+
     function novosDados() {
         setTipo("novo");
     }
@@ -95,6 +122,22 @@ const Cardapio = () => {
         }
     }
 
+    // testes fitro de data
+    //---------------------------------------------------------
+    const [dataSelecionada, setDataSelecionada] = useState("");
+
+    const handleDateChange = (e) => {
+        setDataSelecionada(e.target.value);
+    };
+
+    const cardapiosFiltrados = cardapio.filter((item) => {
+        if (!dataSelecionada) return true;
+        return new Date(item.data).toLocaleDateString('pt-BR') === new Date(dataSelecionada).toLocaleDateString('pt-BR');
+    });
+    //---------------------------------------------------------
+    // fim testes fitro de data
+
+
     return (
         <div>
             <button 
@@ -158,8 +201,21 @@ const Cardapio = () => {
                 - Como cadastrar os pratos dentro de um cardapio?
             */}
 
-            {cardapio && cardapio.length > 0 ? (
-                cardapio.map((item) => (
+            <div className="mb-4">
+                <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
+                    Selecione uma data:
+                </label>
+                <input 
+                    id="datePicker"
+                    type="date" 
+                    value={dataSelecionada} 
+                    onChange={handleDateChange}
+                    className="border border-gray-300 rounded px-3 py-2"
+                />
+            </div>
+
+            {cardapiosFiltrados && cardapiosFiltrados.length > 0 ? (
+                cardapiosFiltrados.map((item) => (
                     <div key={item.id} className="mb-6">
                         <div className="flex items-center justify-between mb-2">
                             <div>
@@ -186,16 +242,16 @@ const Cardapio = () => {
                                 />
                             </div>
                         </div>
-                        {item.itens && item.itens.length > 0 ? (
+                        {itensPorCardapio[item.id] && itensPorCardapio[item.id].length > 0  ? (
                             <ul className="ml-4 list-disc">
-                                {item.itens.map((subItem) => (
+                                {itensPorCardapio[item.id].map((subItem) => (
                                     <li key={subItem.id} className="mb-2">
                                         <div className="flex items-center">
-                                            <img
+                                            {/* <img
                                                 src={subItem.imagem_url}
                                                 alt={subItem.nome}
                                                 className="h-10 w-10 rounded-full mr-3"
-                                            />
+                                            /> */}
                                             <div>
                                                 <strong>{subItem.nome}</strong>
                                                 <p className="text-gray-600">{subItem.descricao}</p>
@@ -212,6 +268,7 @@ const Cardapio = () => {
             ) : (
                 <p>Nenhum cardápio encontrado.</p>
             )}
+
         </div>
     );
 

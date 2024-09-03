@@ -126,17 +126,12 @@ const Cardapio = () => {
     //---------------------------------------------------------
     const [dataSelecionada, setDataSelecionada] = useState("");
 
-    const handleDateChange = (e) => {
-        setDataSelecionada(e.target.value);
-    };
-
     const cardapiosFiltrados = cardapio.filter((item) => {
         if (!dataSelecionada) return true;
         return new Date(item.data).toLocaleDateString('pt-BR') === new Date(dataSelecionada).toLocaleDateString('pt-BR');
     });
     //---------------------------------------------------------
     // fim testes fitro de data
-
 
     return (
         <div>
@@ -209,7 +204,9 @@ const Cardapio = () => {
                     id="datePicker"
                     type="date" 
                     value={dataSelecionada} 
-                    onChange={handleDateChange}
+                    onChange={(e) => {
+                        setDataSelecionada(e.target.value);
+                    }}
                     className="border border-gray-300 rounded px-3 py-2"
                 />
             </div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import DropdownMenu from "@/components/DropDownMenu";
 
 const Cardapio = () => {
     const [cardapio, setCardapio] = useState([]);
@@ -23,16 +24,9 @@ const Cardapio = () => {
 
     // testes requisição de itens
     //---------------------------------------------------------
-    
-   const [itensPorCardapio, setItensPorCardapio] = useState({});
 
-    // useEffect(() => {
-    //     fetch(url + `cardapio/${cardapioId}/itens`)
-    //         .then((response) => response.json())
-    //         .then((data) => setItensPorCardapio(data))
-    //         .catch((err) => console.log(err));
-    // }, [url]);
-    
+    const [itensPorCardapio, setItensPorCardapio] = useState({});
+
     const fetchItens = async (cardapioId) => {
         try {
             const response = await fetch(url + `cardapio/${cardapioId}/itens`);
@@ -46,7 +40,7 @@ const Cardapio = () => {
     useEffect(() => {
         cardapio.forEach(item => fetchItens(item.id));
     }, [cardapio]);
-   //---------------------------------------------------------
+    //---------------------------------------------------------
 
     function novosDados() {
         setTipo("novo");
@@ -135,8 +129,8 @@ const Cardapio = () => {
 
     return (
         <div>
-            <button 
-                type="button" 
+            <button
+                type="button"
                 onClick={novosDados}
                 className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700"
             >
@@ -173,15 +167,15 @@ const Cardapio = () => {
                         }}
                         className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
                     />
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={limparDados}
                         className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700 mr-2"
                     >
                         Cancelar
                     </button>
-                    <button 
-                        type="button" 
+                    <button
+                        type="button"
                         onClick={gravaDados}
                         className="bg-gray-500 text-white px-4 py-2 mt-2 rounded hover:bg-gray-700"
                     >
@@ -200,10 +194,10 @@ const Cardapio = () => {
                 <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
                     Selecione uma data:
                 </label>
-                <input 
+                <input
                     id="datePicker"
-                    type="date" 
-                    value={dataSelecionada} 
+                    type="date"
+                    value={dataSelecionada}
                     onChange={(e) => {
                         setDataSelecionada(e.target.value);
                     }}
@@ -239,7 +233,7 @@ const Cardapio = () => {
                                 />
                             </div>
                         </div>
-                        {itensPorCardapio[item.id] && itensPorCardapio[item.id].length > 0  ? (
+                        {itensPorCardapio[item.id] && itensPorCardapio[item.id].length > 0 ? (
                             <ul className="ml-4 list-disc">
                                 {itensPorCardapio[item.id].map((subItem) => (
                                     <li key={subItem.id} className="mb-2">
@@ -260,6 +254,7 @@ const Cardapio = () => {
                         ) : (
                             <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
                         )}
+                        {/* <DropdownMenu /> */}
                     </div>
                 ))
             ) : (

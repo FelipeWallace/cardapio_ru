@@ -9,7 +9,6 @@ const Item = () => {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [imagem_url, setImagem_url] = useState("");
-    // const [tipo, setTipo] = useState("");
 
     const url = "http://localhost:9081/";
 
@@ -31,7 +30,7 @@ const Item = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newItem = { nome, descricao, imagem_url};
+        const newItem = { nome, descricao, imagem_url };
 
         if (id) {
             // Editar
@@ -67,6 +66,22 @@ const Item = () => {
         fetchItens();
     };
 
+    // Tentar exibir mensagem de erro
+    
+    // const handleDelete = async (id) => {
+    //     await axios.delete(`${url}itens/${id}`).then((response) => {
+    //         console.log("ID:", id);
+    //         if (response.status === 200) {
+    //             fetchItens();                
+    //         } else if (response.status === 400) {
+    //             alert("erro zzz" + response.data.message);
+    //         }
+    //     }).catch((error) => {
+    //         alert("Erro ao excluir item:", error);
+    //     });
+    // };
+
+    
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,

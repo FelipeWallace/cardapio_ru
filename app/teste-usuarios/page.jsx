@@ -1,3 +1,6 @@
+// Cadastrar novos usuários usando o authO
+// Definir perfil padrão como User
+
 'use client'
 
 import React, { useEffect, useState } from "react";

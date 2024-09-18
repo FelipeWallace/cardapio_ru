@@ -26,7 +26,7 @@ const Avaliacoes = () => {
             .catch((err) => console.log(err));
     }, [url]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = () => {
         
         const avaliacaoData = { 
             pontuacao, 
@@ -144,7 +144,7 @@ const Avaliacoes = () => {
                             <p className="text-gray-500">{avaliacao.comentario}</p>
                             <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString()}`}</p>
                             <p className="text-gray-400 text-sm">{`ID do Usuário: ${avaliacao.usuarios_id}`}</p>
-                            <p className="text-gray-400 text-sm">{`ID do Cardápio: ${avaliacao.usuarios_id}`}</p>
+                            <p className="text-gray-400 text-sm">{`ID do Cardápio: ${avaliacao.cardapio_id}`}</p>
                         </div>
                         <div className="flex space-x-4">
                             <button onClick={() => handleEdit(avaliacao)} className="text-blue-500 hover:text-blue-700">

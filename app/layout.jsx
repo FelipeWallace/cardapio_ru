@@ -20,7 +20,7 @@ const RootLayout = ({ children }) => {
 
             <main className='app'>
                 <Nav />
-                <Avisos />
+                {/* <Avisos /> */}
                 <SidebarMenu />
                 {children}
             </main>

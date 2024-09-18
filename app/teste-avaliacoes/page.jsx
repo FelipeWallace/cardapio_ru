@@ -27,12 +27,12 @@ const Avaliacoes = () => {
     }, [url]);
 
     const handleSubmit = (e) => {
-        e.preventDefault();
+        
         const avaliacaoData = { 
             pontuacao, 
             comentario, 
-            Usuarios_ID: usuariosId, // Corrigido para usar Usuarios_ID
-            Cardapio_ID: cardapioId // Corrigido para usar Cardapio_ID
+            usuarios_id: usuariosId, // Corrigido para usar Usuarios_ID
+            cardapio_id: cardapioId // Corrigido para usar Cardapio_ID
         };
 
         if (id) {
@@ -49,6 +49,7 @@ const Avaliacoes = () => {
             axios.post(`${url}avaliacoes`, avaliacaoData)
                 .then(() => {
                     fetch(url + "avaliacoes")
+                        //.then ((response) => {if (response.status == 400) {console.log("Erro de validação")}})
                         .then((response) => response.json())
                         .then((data) => setAvaliacoes(data))
                         .catch((err) => console.log(err));
@@ -73,8 +74,8 @@ const Avaliacoes = () => {
         setId(avaliacao.id);
         setPontuacao(avaliacao.pontuacao);
         setComentario(avaliacao.comentario);
-        setUsuariosId(avaliacao.Usuarios_ID); // Corrigido para usar Usuarios_ID
-        setCardapioId(avaliacao.Cardapio_ID); // Corrigido para usar Cardapio_ID
+        setUsuariosId(avaliacao.usuarios_id); // Corrigido para usar Usuarios_ID
+        setCardapioId(avaliacao.cardapio_id); // Corrigido para usar Cardapio_ID
     };
 
     const resetForm = () => {
@@ -99,7 +100,7 @@ const Avaliacoes = () => {
         <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4 text-center">Avaliações</h2>
             <p className="text-lg font-semibold mb-4 text-center">{`Média das Avaliações: ${calcularMediaAvaliacoes()} estrelas`}</p>
-            <form onSubmit={handleSubmit} className="mb-4">
+            <div className="mb-4">
                 <div className="mb-2">
                     <label className="block text-gray-700 font-semibold">Pontuação:</label>
                     <StarRating rating={pontuacao} setRating={setPontuacao} />
@@ -126,10 +127,10 @@ const Avaliacoes = () => {
                     className="border border-gray-300 p-2 rounded w-full mb-2"
                     required
                 />
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+                <button type="button" onClick={handleSubmit} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                     {id ? "Atualizar Avaliação" : "Adicionar Avaliação"}
                 </button>
-            </form>
+            </div>
             <ul className="list-none space-y-4">
                 {sortedAvaliacoes.map((avaliacao) => (
                     <li
@@ -142,8 +143,8 @@ const Avaliacoes = () => {
                             </strong>
                             <p className="text-gray-500">{avaliacao.comentario}</p>
                             <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString()}`}</p>
-                            <p className="text-gray-400 text-sm">{`ID do Usuário: ${avaliacao.Usuarios_ID}`}</p>
-                            <p className="text-gray-400 text-sm">{`ID do Cardápio: ${avaliacao.Cardapio_ID}`}</p>
+                            <p className="text-gray-400 text-sm">{`ID do Usuário: ${avaliacao.usuarios_id}`}</p>
+                            <p className="text-gray-400 text-sm">{`ID do Cardápio: ${avaliacao.usuarios_id}`}</p>
                         </div>
                         <div className="flex space-x-4">
                             <button onClick={() => handleEdit(avaliacao)} className="text-blue-500 hover:text-blue-700">

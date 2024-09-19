@@ -140,7 +140,7 @@ const Item = () => {
                         className="mb-2 flex justify-between items-center bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out"
                     >
                         <div>
-                            <strong className="text-lg font-semibold text-gray-700">{item.nome}</strong>
+                            <strong className="text-lg font-semibold text-gray-700">{item.id} - {item.nome}</strong>
                             <p className="text-gray-500">{item.descricao}</p>
                         </div>
                         <div className="flex space-x-2">

@@ -1,6 +1,5 @@
 // Pode ser que seja util deixar o usuário definir a data
-// Ainda não possui uma validação para o usuario_id (aceita qualquer valor)
-// transformar em component pop-up
+// transformar em componente
 
 'use client';
 

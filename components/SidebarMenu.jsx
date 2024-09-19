@@ -8,7 +8,7 @@ const SidebarMenu = () => {
                 <ul className="space-y-4">
                     <li>
                         <Link 
-                            href="/cardapio" 
+                            href="/teste-cardapio" 
                             className="hover:bg-gray-700 p-2 rounded block transition-colors"
                         >
                             Cardápio

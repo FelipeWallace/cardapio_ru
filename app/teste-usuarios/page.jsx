@@ -113,8 +113,8 @@ const Usuarios = () => {
                     required
                 >
                     <option value="" disabled>Selecionar Perfil</option>
-                    <option value="admin">Admin</option>
                     <option value="user">User</option>
+                    <option value="admin">Admin</option>
                 </select>
                 <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                     {id ? "Atualizar Usuário" : "Adicionar Usuário"}
@@ -125,7 +125,7 @@ const Usuarios = () => {
                     <li key={usuario.id} className="mb-2 flex justify-between items-center bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out">
                         <div>
                             <strong className="text-lg font-semibold text-gray-700">{usuario.nome}</strong>
-                            <p className="text-gray-500">{usuario.email}</p>
+                            <p className="text-gray-500">{usuario.id}-{usuario.email}</p>
                         </div>
                         <div className="flex space-x-4">
                             <button onClick={() => handleEdit(usuario)} className="text-blue-500 hover:text-blue-700">

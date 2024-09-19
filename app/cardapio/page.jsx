@@ -12,7 +12,9 @@ const Cardapio = () => {
     const [titulo, setTitulo] = useState("");
     const [tipo, setTipo] = useState("");
 
-    //const url = "https://restaurante-api-swart.vercel.app/";
+    const [itensPorCardapio, setItensPorCardapio] = useState({});
+    const [dataSelecionada, setDataSelecionada] = useState("");
+
     const url = "http://localhost:9081/";
 
     useEffect(() => {
@@ -22,11 +24,8 @@ const Cardapio = () => {
             .catch((err) => console.log(err));
     }, [url]);
 
-    // testes requisição de itens
+    // Requisição de itens
     //---------------------------------------------------------
-
-    const [itensPorCardapio, setItensPorCardapio] = useState({});
-
     const fetchItens = async (cardapioId) => {
         try {
             const response = await fetch(url + `cardapio/${cardapioId}/itens`);
@@ -116,17 +115,14 @@ const Cardapio = () => {
         }
     }
 
-    // testes fitro de data
+    // fitro de data
     //---------------------------------------------------------
-    const [dataSelecionada, setDataSelecionada] = useState("");
-
     const cardapiosFiltrados = cardapio.filter((item) => {
         if (!dataSelecionada) return true;
         return new Date(item.data).toLocaleDateString('pt-BR') === new Date(dataSelecionada).toLocaleDateString('pt-BR');
     });
     //---------------------------------------------------------
-    // fim testes fitro de data
-
+    
     return (
         <div>
             <button
@@ -185,11 +181,6 @@ const Cardapio = () => {
             ) : (
                 false
             )}
-            {/* 
-                - Não é possível editar
-                - Como cadastrar os pratos dentro de um cardapio?
-            */}
-
             <div className="mb-4">
                 <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
                     Selecione uma data:

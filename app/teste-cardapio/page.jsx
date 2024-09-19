@@ -1,73 +1,281 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const menu = {
-    Monday: ['Pasta', 'Salad', 'Soup'],
-    Tuesday: ['Steak', 'Fries', 'Coleslaw'],
-    Wednesday: ['Chicken', 'Rice', 'Vegetables'],
-    Thursday: ['Fish', 'Chips', 'Peas'],
-    Friday: ['Pizza', 'Wings', 'Garlic Bread'],
-    Saturday: ['Burgers', 'Onion Rings', 'Milkshake'],
-    Sunday: ['Roast Beef', 'Mashed Potatoes', 'Gravy']
-};
+// Componente de Formulário para criar/editar cardápios
+const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
+    <>
+        <input
+            type="date"
+            name="txtData"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
+        />
+        <input
+            type="text"
+            name="txtRefeicao"
+            placeholder="Refeição"
+            value={refeicao}
+            onChange={(e) => setRefeicao(e.target.value)}
+            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
+        />
+        <input
+            type="text"
+            name="txtTitulo"
+            placeholder="Título"
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
+        />
+        <div className="mt-4">
+            <button
+                type="button"
+                onClick={limparDados}
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2"
+            >
+                Cancelar
+            </button>
+            <button
+                type="button"
+                onClick={gravaDados}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+                {tipo === "novo" ? "Criar" : "Atualizar"}
+            </button>
+        </div>
+    </>
+);
 
-const daysOfWeek = Object.keys(menu);
+// Componente de Item de Cardápio com exibição dos itens do cardápio
+const CardapioItem = ({ item, editarDados, apagarDados, itens }) => (
+    <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md">
+        <div className="flex items-center justify-between mb-2">
+            <div>
+                {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
+            </div>
+            <div className="flex space-x-2">
+                <button
+                    onClick={() => editarDados(item.id)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 3.487a1.5 1.5 0 011.95-.486l.04.025a1.5 1.5 0 01.487 1.951l-8.462 14.63a1.5 1.5 0 01-.573.574l-5.314 2.659a1.5 1.5 0 01-2.028-1.128l-.006-.105a1.5 1.5 0 01.487-1.95l5.314-2.66a1.5 1.5 0 01.573-.573l8.462-14.63z" />
+                    </svg>
+                    <span>Editar</span>
+                </button>
 
-export default function MenuCarousel() {
-    const [selectedDay, setSelectedDay] = useState(daysOfWeek[0]);
+                <button
+                    onClick={() => apagarDados(item.id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 flex items-center space-x-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h10.5m-10.5 0H5.25m12.75 0h1.5M6.75 6.75v12.75a2.25 2.25 0 002.25 2.25h6.75a2.25 2.25 0 002.25-2.25V6.75m-9 0v12.75m3-12.75v12.75m-3-12.75h6.75" />
+                    </svg>
+                    <span>Apagar</span>
+                </button>
 
-    // Função para obter o dia da semana atual
-    const getCurrentDay = () => {
-        const today = new Date();
-        const dayIndex = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-        return daysOfWeek[dayIndex === 0 ? 6 : dayIndex - 1]; // Ajusta Sunday para ser o último item
-    };
+            </div>
+        </div>
+        {itens && itens.length > 0 ? (
+            <ul className="ml-4 list-disc">
+                {itens.map(subItem => (
+                    <li key={subItem.id} className="mb-2">
+                        <strong>{subItem.nome}</strong>
+                        <p className="text-gray-600">{subItem.descricao}</p>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
+        )}
+    </div>
+);
+
+const Cardapio = () => {
+    const [cardapio, setCardapio] = useState([]);
+    const [id, setId] = useState("");
+    const [data, setData] = useState(null);
+    const [refeicao, setRefeicao] = useState("");
+    const [titulo, setTitulo] = useState("");
+    const [itensPorCardapio, setItensPorCardapio] = useState({});
+    const [dataSelecionada, setDataSelecionada] = useState("");
+    const [tipo, setTipo] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const url = "http://localhost:9081/";
 
     useEffect(() => {
-        setSelectedDay(getCurrentDay());
-    }, []);
+        setLoading(true);
+        fetch(url + "cardapio")
+            .then((response) => response.json())
+            .then((data) => setCardapio(data))
+            .catch((err) => console.log(err))
+            .finally(() => setLoading(false));
+    }, [url]);
 
-    const handleNextDay = () => {
-        const currentIndex = daysOfWeek.indexOf(selectedDay);
-        const nextIndex = (currentIndex + 1) % daysOfWeek.length;
-        setSelectedDay(daysOfWeek[nextIndex]);
+    useEffect(() => {
+        cardapio.forEach(item => fetchItens(item.id));
+    }, [cardapio]);
+
+    const fetchItens = async (cardapioId) => {
+        try {
+            const response = await fetch(url + `cardapio/${cardapioId}/itens`);
+            const data = await response.json();
+            setItensPorCardapio((prev) => ({ ...prev, [cardapioId]: data }));
+        } catch (error) {
+            console.error("Erro ao buscar itens:", error);
+        }
     };
 
-    const handlePreviousDay = () => {
-        const currentIndex = daysOfWeek.indexOf(selectedDay);
-        const prevIndex = (currentIndex - 1 + daysOfWeek.length) % daysOfWeek.length;
-        setSelectedDay(daysOfWeek[prevIndex]);
+    // Função para normalizar a data e garantir que estamos comparando no formato YYYY-MM-DD
+    const normalizarData = (data) => {
+        return new Date(data).toISOString().split('T')[0]; // Converte para o formato YYYY-MM-DD
+    };
+
+    // Filtrar os cardápios com base na data selecionada
+    const cardapiosFiltrados = cardapio.filter((item) => {
+        if (!dataSelecionada) return true;
+
+        // Normaliza a data vinda do backend e a data selecionada
+        const dataItemNormalizada = normalizarData(item.data);
+        const dataSelecionadaNormalizada = normalizarData(dataSelecionada);
+
+        return dataItemNormalizada === dataSelecionadaNormalizada;
+    });
+
+
+    const novosDados = () => setTipo("novo");
+
+    const limparDados = () => {
+        setId("");
+        setData(null);
+        setRefeicao("");
+        setTitulo("");
+        setTipo("");
+    };
+
+    const editarDados = (cod) => {
+        const cardapioSelecionado = cardapio.find((item) => item.id === cod);
+        const { id, data, refeicao, titulo } = cardapioSelecionado;
+        setTipo("editar");
+        setId(id);
+        setData(data);
+        setRefeicao(refeicao);
+        setTitulo(titulo);
+    };
+
+    const apagarDados = (cod) => {
+        axios.delete(url + "cardapio/" + cod).then(() => {
+            setCardapio(cardapio.filter(item => item.id !== cod));
+        });
+    };
+
+    // Função para excluir o cardápio e remover os itens relacionados
+    // const apagarDados = (cardapioId) => {
+    //     try {
+    //         // Primeiro, excluir todos os itens relacionados ao cardápio
+    //         const urlItens = `${url}cardapio/${cardapioId}/itens`;
+    //         axios.delete(urlItens); // Requisição DELETE para remover itens
+    
+    //         // Depois de excluir os itens, excluir o cardápio
+    //         const urlCardapio = `${url}cardapio/${cardapioId}`;
+    //         axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
+    
+    //         // Atualizar a lista de cardápios no frontend após a exclusão
+    //         setCardapio(cardapio.filter(item => item.id !== cardapioId));
+    
+    //         console.log("Cardápio e seus itens foram removidos com sucesso!");
+    //     } catch (error) {
+    //         console.error("Erro ao remover o cardápio e seus itens:", error);
+    //     }
+    // };
+    
+    
+
+    const gravaDados = () => {
+        if (data && refeicao && titulo) {
+            if (tipo === "novo") {
+                axios.post(url + "cardapio", { data, refeicao, titulo })
+                    .then((response) => atualizaListaComNovoCardapio(response))
+                    .catch((err) => console.log(err));
+            } else if (tipo === "editar") {
+                axios.put(url + "cardapio/" + id, { id, data, refeicao, titulo })
+                    .then((response) => atualizaListaCardapioEditado(response))
+                    .catch((err) => console.log(err));
+            }
+        } else {
+            console.log("Preencha os campos");
+        }
+    };
+
+    const atualizaListaComNovoCardapio = (response) => {
+        const novoCardapio = response.data;
+        setCardapio([...cardapio, novoCardapio]);
+        limparDados();
+    };
+
+    const atualizaListaCardapioEditado = (response) => {
+        const cardapioEditado = response.data;
+        const cardapiosAtualizados = cardapio.map(item => item.id === cardapioEditado.id ? cardapioEditado : item);
+        setCardapio(cardapiosAtualizados);
+        limparDados();
     };
 
     return (
-        <div className="p-6 max-w-md mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-4">
-                Cardápio da Semana
-            </h2>
-            <div className="flex justify-between items-center mb-4">
-                <button 
-                    onClick={handlePreviousDay} 
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
-                >
-                    Anterior
-                </button>
-                <span className="text-xl font-semibold">{selectedDay}</span>
-                <button 
-                    onClick={handleNextDay} 
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700"
-                >
-                    Próximo
-                </button>
+        <div className="container mx-auto p-4">
+            <button
+                type="button"
+                onClick={novosDados}
+                className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 mb-4"
+            >
+                Novo Cardápio
+            </button>
+            {tipo && (
+                <CardapioForm
+                    tipo={tipo}
+                    data={data}
+                    refeicao={refeicao}
+                    titulo={titulo}
+                    setData={setData}
+                    setRefeicao={setRefeicao}
+                    setTitulo={setTitulo}
+                    limparDados={limparDados}
+                    gravaDados={gravaDados}
+                />
+            )}
+            <div className="mb-4">
+                <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
+                    Selecione uma data:
+                </label>
+                <input
+                    id="datePicker"
+                    type="date"
+                    value={dataSelecionada}
+                    onChange={(e) => setDataSelecionada(e.target.value)}
+                    className="border border-gray-300 rounded px-3 py-2"
+                />
             </div>
-            <div className="bg-white shadow rounded-lg p-4">
-                <h3 className="text-lg font-bold mb-2">Menu de {selectedDay}</h3>
-                <ul className="list-disc list-inside">
-                    {menu[selectedDay].map((item, index) => (
-                        <li key={index} className="text-gray-700">{item}</li>
-                    ))}
-                </ul>
-            </div>
+            {loading ? (
+                <p>Carregando cardápios...</p>
+            ) : (
+                cardapiosFiltrados.length > 0 ? (
+                    cardapiosFiltrados.map((item) => (
+                        <CardapioItem
+                            key={item.id}
+                            item={item}
+                            editarDados={editarDados}
+                            apagarDados={apagarDados}
+                            itens={itensPorCardapio[item.id]}
+                        />
+                    ))
+                ) : (
+                    <p>Nenhum cardápio encontrado.</p>
+                )
+            )}
         </div>
     );
-}
+};
+
+export default Cardapio;

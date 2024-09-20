@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import AvaliacoesModal from "@components/AvaliacoesModal";
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
@@ -49,31 +50,32 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, editarDados, apagarDados, itens }) => (
+const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClick, mediaAvaliacoes }) => (
     <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md">
         <div className="flex items-center justify-between mb-2">
             <div>
                 {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
+                <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p> {/* Exibe a média */}
             </div>
             <div className="flex space-x-2">
+                <button 
+                    // ainda falta passar o userId
+                    onClick={() => handleAvaliarClick(item.id)} 
+                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Avaliar
+                </button>
                 <button
                     onClick={() => editarDados(item.id)}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 3.487a1.5 1.5 0 011.95-.486l.04.025a1.5 1.5 0 01.487 1.951l-8.462 14.63a1.5 1.5 0 01-.573.574l-5.314 2.659a1.5 1.5 0 01-2.028-1.128l-.006-.105a1.5 1.5 0 01.487-1.95l5.314-2.66a1.5 1.5 0 01.573-.573l8.462-14.63z" />
-                    </svg>
-                    <span>Editar</span>
+                    Editar
                 </button>
 
                 <button
                     onClick={() => apagarDados(item.id)}
                     className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 flex items-center space-x-2"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 6.75h10.5m-10.5 0H5.25m12.75 0h1.5M6.75 6.75v12.75a2.25 2.25 0 002.25 2.25h6.75a2.25 2.25 0 002.25-2.25V6.75m-9 0v12.75m3-12.75v12.75m-3-12.75h6.75" />
-                    </svg>
-                    <span>Apagar</span>
+                    Apagar
                 </button>
 
             </div>
@@ -104,6 +106,13 @@ const Cardapio = () => {
     const [tipo, setTipo] = useState("");
     const [loading, setLoading] = useState(false);
 
+    const [selectedCardapioId, setSelectedCardapioId] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [avaliacoes, setAvaliacoes] = useState([]);
+
+    
+
     const url = "http://localhost:9081/";
 
     useEffect(() => {
@@ -119,6 +128,12 @@ const Cardapio = () => {
         cardapio.forEach(item => fetchItens(item.id));
     }, [cardapio]);
 
+    useEffect(() => {
+        axios.get(url + "avaliacoes")
+            .then(response => setAvaliacoes(response.data))
+            .catch(err => console.log(err));
+    }, []);
+
     const fetchItens = async (cardapioId) => {
         try {
             const response = await fetch(url + `cardapio/${cardapioId}/itens`);
@@ -129,9 +144,9 @@ const Cardapio = () => {
         }
     };
 
-    // Função para normalizar a data e garantir que estamos comparando no formato YYYY-MM-DD
+    // Função para normalizar a data e garantir o formato YYYY-MM-DD
     const normalizarData = (data) => {
-        return new Date(data).toISOString().split('T')[0]; // Converte para o formato YYYY-MM-DD
+        return new Date(data).toISOString().split('T')[0];
     };
 
     // Filtrar os cardápios com base na data selecionada
@@ -144,7 +159,6 @@ const Cardapio = () => {
 
         return dataItemNormalizada === dataSelecionadaNormalizada;
     });
-
 
     const novosDados = () => setTipo("novo");
 
@@ -166,34 +180,26 @@ const Cardapio = () => {
         setTitulo(titulo);
     };
 
-    const apagarDados = (cod) => {
-        axios.delete(url + "cardapio/" + cod).then(() => {
-            setCardapio(cardapio.filter(item => item.id !== cod));
-        });
-    };
-
     // Função para excluir o cardápio e remover os itens relacionados
-    // const apagarDados = (cardapioId) => {
-    //     try {
-    //         // Primeiro, excluir todos os itens relacionados ao cardápio
-    //         const urlItens = `${url}cardapio/${cardapioId}/itens`;
-    //         axios.delete(urlItens); // Requisição DELETE para remover itens
+    const apagarDados = (cardapioId) => {
+        try {
+            // Primeiro, excluir todos os itens relacionados ao cardápio
+            const urlItens = `${url}cardapio/${cardapioId}/itens`;
+            axios.delete(urlItens); // Requisição DELETE para remover itens
     
-    //         // Depois de excluir os itens, excluir o cardápio
-    //         const urlCardapio = `${url}cardapio/${cardapioId}`;
-    //         axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
+            // Depois de excluir os itens, excluir o cardápio
+            const urlCardapio = `${url}cardapio/${cardapioId}`;
+            axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
     
-    //         // Atualizar a lista de cardápios no frontend após a exclusão
-    //         setCardapio(cardapio.filter(item => item.id !== cardapioId));
+            // Atualizar a lista de cardápios no frontend após a exclusão
+            setCardapio(cardapio.filter(item => item.id !== cardapioId));
     
-    //         console.log("Cardápio e seus itens foram removidos com sucesso!");
-    //     } catch (error) {
-    //         console.error("Erro ao remover o cardápio e seus itens:", error);
-    //     }
-    // };
+            console.log("Cardápio e seus itens foram removidos com sucesso!");
+        } catch (error) {
+            console.error("Erro ao remover o cardápio e seus itens:", error);
+        }
+    };
     
-    
-
     const gravaDados = () => {
         if (data && refeicao && titulo) {
             if (tipo === "novo") {
@@ -221,6 +227,22 @@ const Cardapio = () => {
         const cardapiosAtualizados = cardapio.map(item => item.id === cardapioEditado.id ? cardapioEditado : item);
         setCardapio(cardapiosAtualizados);
         limparDados();
+    };
+
+    const handleAvaliarClick = (id) => {
+        setSelectedCardapioId(id);
+        setIsModalOpen(true); // Abre o modal
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false); // Fecha o modal
+    };
+
+    const calcularMediaAvaliacoes = (cardapioId) => {
+        const avaliacoesDoCardapio = avaliacoes.filter(avaliacao => avaliacao.cardapio_id === cardapioId);
+        if (avaliacoesDoCardapio.length === 0) return "Sem avaliações"; // Caso não tenha avaliações
+        const totalPontuacao = avaliacoesDoCardapio.reduce((acc, avaliacao) => acc + avaliacao.pontuacao, 0);
+        return (totalPontuacao / avaliacoesDoCardapio.length).toFixed(2); // Média com duas casas decimais
     };
 
     return (
@@ -268,12 +290,15 @@ const Cardapio = () => {
                             editarDados={editarDados}
                             apagarDados={apagarDados}
                             itens={itensPorCardapio[item.id]}
+                            handleAvaliarClick={handleAvaliarClick}
+                            mediaAvaliacoes={calcularMediaAvaliacoes}
                         />
                     ))
                 ) : (
                     <p>Nenhum cardápio encontrado.</p>
                 )
             )}
+            {isModalOpen && <AvaliacoesModal cardapioId={selectedCardapioId} onClose={closeModal} />}
         </div>
     );
 };

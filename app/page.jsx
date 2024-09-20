@@ -1,6 +1,6 @@
 import Cardapio from "@components/Cardapio";
 const Home = () => {
-
+  
   const today = new Date();
 
   return (

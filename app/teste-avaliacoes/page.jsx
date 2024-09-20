@@ -1,8 +1,3 @@
-// transformar em componente/pop-up
-// passar como parametros cardapioId e usuariosId, sem validação no momento
-// por padrão a data esta sendo setada com o dia de hoje diretamente na API
-// não é possível editar e postar novas avaliações
-
 'use client'
 
 import React, { useEffect, useState } from "react";

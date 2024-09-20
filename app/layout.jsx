@@ -2,7 +2,6 @@ import '@styles/globals.css';
 
 import Nav  from '@components/Nav';
 import SidebarMenu from '@components/SidebarMenu';
-import Avisos from '@components/Avisos';
 import Provider from '@components/Provider';
 
 export const metadata = {
@@ -20,7 +19,6 @@ const RootLayout = ({ children }) => {
 
             <main className='app'>
                 <Nav />
-                {/* <Avisos /> */}
                 <SidebarMenu />
                 {children}
             </main>

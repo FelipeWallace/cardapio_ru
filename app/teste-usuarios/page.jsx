@@ -1,4 +1,4 @@
-// Cadastrar novos usuários usando o authO
+// Cadastrar novos usuários usando o Oauth
 // Definir perfil padrão como User
 
 'use client'

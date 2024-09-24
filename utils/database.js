@@ -1,29 +1,23 @@
 import { Pool } from 'pg';
+import dotenv from 'dotenv';
 
-let pool;
+// Carrega as variáveis de ambiente do arquivo .env
+dotenv.config();
 
-export const connectToDB = async () => {
-  if (pool) {
-    console.log('PostgreSQL is already connected');
-    return pool;
-  }
+// Cria uma nova pool de conexões usando a string de conexão do .env
+const pool = new Pool({
+  connectionString: process.env.POSTGRESQL_URI, // Obtém a string de conexão do arquivo .env
+});
 
+// Função para conectar ao banco de dados e lidar com erros
+const connectToDB = async () => {
   try {
-    // Criação do pool de conexões
-    pool = new Pool({
-      connectionString: process.env.POSTGRESQL_URI, // URL do PostgreSQL vinda das variáveis de ambiente
-      max: 10, // Número máximo de conexões simultâneas
-      idleTimeoutMillis: 30000, // Tempo de inatividade antes de liberar uma conexão
-      connectionTimeoutMillis: 2000, // Tempo limite para tentar conectar
-    });
-
-    // Testa a conexão
-    await pool.query('SELECT NOW()');
-
-    console.log('PostgreSQL connected');
-    return pool;
+    const client = await pool.connect();
+    console.log('Conectado ao PostgreSQL com sucesso.');
+    client.release(); // Libera a conexão depois de testar
   } catch (error) {
     console.error('Erro ao conectar ao PostgreSQL:', error);
-    throw error;
   }
 };
+
+export { pool, connectToDB };

@@ -30,7 +30,7 @@ const Item = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const newItem = { nome, descricao, imagem_url };
+        const newItem = { nome: nome.toUpperCase(), descricao, imagem_url };
 
         if (id) {
             // Editar
@@ -160,7 +160,7 @@ const Item = () => {
                     </li>
                 ))}
             </ul>
-            <button onClick={scrollToTop} className="mb-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+            <button onClick={scrollToTop} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                 Voltar ao Topo
             </button>
         </div>

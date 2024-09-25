@@ -4,7 +4,7 @@ import Nav  from '@components/Nav';
 import SidebarMenu from '@components/SidebarMenu';
 import Provider from '@components/Provider';
 
-import NavTest from '@components/NavTest';
+import NavTest from '@components/Nav';
 
 export const metadata = {
     title: 'Restaurante Universitário da Unifei',
@@ -21,8 +21,7 @@ const RootLayout = ({ children }) => {
                 </div>
 
                 <main className='app'>
-                    {/* <Nav /> */}
-                    <NavTest />
+                    <Nav />
                     <SidebarMenu />
                     {children}
                 </main>

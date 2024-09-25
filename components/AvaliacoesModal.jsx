@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import StarRating from "@components/StarRating";
 
-const AvaliacoesModal = ({ cardapioId, onClose }) => {
+const AvaliacoesModal = ({ cardapioId, userId, onClose }) => {
     const [avaliacoes, setAvaliacoes] = useState([]);
     const [id, setId] = useState("");
     const [pontuacao, setPontuacao] = useState(0);
@@ -22,7 +22,7 @@ const AvaliacoesModal = ({ cardapioId, onClose }) => {
         const avaliacaoData = { 
             pontuacao, 
             comentario, 
-            usuarios_id: usuariosId, 
+            usuarios_id: userId, 
             cardapio_id: cardapioId 
         };
 
@@ -71,14 +71,14 @@ const AvaliacoesModal = ({ cardapioId, onClose }) => {
                     placeholder="Comentário"
                     className="border border-gray-300 p-2 rounded w-full mb-2"
                 />
-                <input
+                {/* <input
                     type="text"
                     value={usuariosId}
                     onChange={(e) => setUsuariosId(e.target.value)}
                     placeholder="ID do Usuário"
                     className="border border-gray-300 p-2 rounded w-full mb-2"
                     required
-                />
+                /> */}
                 <button
                     type="button"
                     onClick={handleSubmit}

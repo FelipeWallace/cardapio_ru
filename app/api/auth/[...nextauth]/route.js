@@ -12,10 +12,8 @@ const handler = NextAuth({
   callbacks: {
     async session({ session }) {
       try {
-        // Conectar ao banco de dados
         await connectToDB();
 
-        // Consultar o banco de dados para recuperar informações adicionais do usuário
         const query = `
           SELECT * FROM usuarios WHERE email = $1;
         `;
@@ -36,7 +34,6 @@ const handler = NextAuth({
 
     async signIn({ profile }) {
       try {
-        // Conectar ao banco de dados
         await connectToDB();
 
         // Verificar se o usuário já existe no banco de dados

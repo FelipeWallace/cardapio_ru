@@ -10,8 +10,8 @@ const SidebarMenu = () => {
         <div
             onMouseEnter={() => setIsOpen(true)}  // Abrir o menu ao passar o mouse
             onMouseLeave={() => setIsOpen(false)} // Fechar o menu ao sair com o mouse
-            className={`h-screen bg-gray-900 text-white flex flex-col fixed top-0 left-0 transition-all duration-300 ${
-                isOpen ? 'w-64' : 'w-16' // Controlar a largura do menu
+            className={`h-screen bg-slate-900 text-white flex flex-col fixed top-0 left-0 transition-all duration-300 ${
+                isOpen ? ' w-64' : ' w-16' // Controlar a largura do menu
             }`}
         >
             <h2 className={`text-2xl font-bold p-4 border-b border-orange-600 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>

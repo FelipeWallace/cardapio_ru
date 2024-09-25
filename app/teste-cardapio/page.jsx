@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AvaliacoesModal from "@components/AvaliacoesModal";
+import { useSession } from "next-auth/react";
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
@@ -96,6 +97,8 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClic
 );
 
 const Cardapio = () => {
+    const { data: session } = useSession();
+
     const [cardapio, setCardapio] = useState([]);
     const [id, setId] = useState("");
     const [data, setData] = useState(null);
@@ -108,6 +111,7 @@ const Cardapio = () => {
 
     const [selectedCardapioId, setSelectedCardapioId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userId, setUserId] = useState("");
 
     const [avaliacoes, setAvaliacoes] = useState([]);
 
@@ -231,6 +235,7 @@ const Cardapio = () => {
 
     const handleAvaliarClick = (id) => {
         setSelectedCardapioId(id);
+        setUserId(session?.user.id);
         setIsModalOpen(true); // Abre o modal
     };
 
@@ -298,7 +303,7 @@ const Cardapio = () => {
                     <p>Nenhum cardápio encontrado.</p>
                 )
             )}
-            {isModalOpen && <AvaliacoesModal cardapioId={selectedCardapioId} onClose={closeModal} />}
+            {isModalOpen && <AvaliacoesModal cardapioId={selectedCardapioId} userId={userId} onClose={closeModal} />}
         </div>
     );
 };

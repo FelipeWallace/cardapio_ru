@@ -1,10 +1,43 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
 const SidebarMenu = () => {
+    const { data: session } = useSession();
+    const [isUserAdmin, setIsUserAdmin] = useState(false);
     const [isOpen, setIsOpen] = useState(false); // Estado para controlar a abertura do menu
+
+    const url = "http://localhost:9081/";
+
+    useEffect(() => {
+        // Função para verificar o perfil do usuário
+        const checkIfUserIsAdmin = async () => {
+            if (session && session.user) {
+                try {
+                    const response = await fetch(`${url}usuarios/${session.user.id}`);
+                    const data = await response.json();
+
+                    const perfil = data.perfil.trim();
+
+                    if (perfil === "admin") {
+                        setIsUserAdmin(true); // Define como true se o perfil for admin
+                    } else {
+                        setIsUserAdmin(false); // Caso contrário, false
+                    }
+                } catch (err) {
+                    console.log("Erro ao buscar usuário:", err);
+                }
+            }
+        };
+
+        checkIfUserIsAdmin();
+    }, [session]); // O useEffect depende da sessão para rodar
+
+    if (!isUserAdmin) {
+        return null; // Não renderiza nada se não for admin
+    }
 
     return (
         <div

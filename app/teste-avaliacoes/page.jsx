@@ -12,6 +12,10 @@ const Avaliacoes = () => {
     const [usuariosId, setUsuariosId] = useState("");
     const [cardapioId, setCardapioId] = useState("");
 
+    const [errorMessage, setErrorMessage] = useState(""); // Estado para armazenar a mensagem de erro
+    const [successMessage, setSuccessMessage] = useState(""); // Estado para armazenar a mensagem de sucesso
+
+
     const url = "http://localhost:9081/";
 
     useEffect(() => {
@@ -22,38 +26,61 @@ const Avaliacoes = () => {
     }, [url]);
 
     const handleSubmit = () => {
-        
+        setErrorMessage(""); // Limpa a mensagem de erro ao iniciar uma nova submissão
+        setSuccessMessage(""); // Limpa a mensagem de sucesso ao iniciar uma nova submissão
+    
         const avaliacaoData = { 
             pontuacao, 
             comentario, 
             usuarios_id: usuariosId, // Corrigido para usar Usuarios_ID
-            cardapio_id: cardapioId // Corrigido para usar Cardapio_ID
+            cardapio_id: cardapioId   // Corrigido para usar Cardapio_ID
         };
-
+    
         if (id) {
             axios.put(`${url}avaliacoes/${id}`, avaliacaoData)
-                .then(() => {
-                    fetch(url + "avaliacoes")
-                        .then((response) => response.json())
-                        .then((data) => setAvaliacoes(data))
-                        .catch((err) => console.log(err));
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        setSuccessMessage("Avaliação atualizada com sucesso!"); // Exibe mensagem de sucesso
+                        return fetch(url + "avaliacoes")
+                            .then((response) => response.json())
+                            .then((data) => setAvaliacoes(data))
+                            .catch((err) => setErrorMessage("Erro ao buscar avaliações."));
+                    } else {
+                        setErrorMessage("Erro ao atualizar avaliação: " + response.statusText);
+                    }
                     resetForm();
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    if (err.response && err.response.status === 400) {
+                        setErrorMessage("Erro de validação: " + err.response.data.error);
+                    } else {
+                        setErrorMessage("Erro ao atualizar avaliação: " + err.message);
+                    }
+                });
         } else {
             axios.post(`${url}avaliacoes`, avaliacaoData)
-                .then(() => {
-                    fetch(url + "avaliacoes")
-                        //.then ((response) => {if (response.status == 400) {console.log("Erro de validação")}})
-                        .then((response) => response.json())
-                        .then((data) => setAvaliacoes(data))
-                        .catch((err) => console.log(err));
+                .then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        setSuccessMessage("Avaliação criada com sucesso!"); // Exibe mensagem de sucesso
+                        return fetch(url + "avaliacoes")
+                            .then((response) => response.json())
+                            .then((data) => setAvaliacoes(data))
+                            .catch((err) => setErrorMessage("Erro ao buscar avaliações."));
+                    } else {
+                        setErrorMessage("Erro ao criar avaliação: " + response.statusText);
+                    }
                     resetForm();
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {
+                    if (err.response && err.response.status === 400) {
+                        setErrorMessage("Erro de validação: " + err.response.data.error);
+                    } else {
+                        setErrorMessage("Erro ao criar avaliação: " + err.message);
+                    }
+                });
         }
     };
-
+    
     const handleDelete = (id) => {
         axios.delete(`${url}avaliacoes/${id}`)
             .then(() => {
@@ -93,6 +120,12 @@ const Avaliacoes = () => {
 
     return (
         <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
+            {/* Exibe a mensagem de erro se houver */}
+            {errorMessage && <div className="bg-red-100 text-red-800 p-2 mb-4 rounded">{errorMessage}</div>}
+            
+            {/* Exibe a mensagem de sucesso se houver */}
+            {successMessage && <div className="bg-green-100 text-green-800 p-2 mb-4 rounded">{successMessage}</div>}
+
             <h2 className="text-2xl font-bold mb-4 text-center">Avaliações</h2>
             <p className="text-lg font-semibold mb-4 text-center">{`Média das Avaliações: ${calcularMediaAvaliacoes()} estrelas`}</p>
             <div className="mb-4">

@@ -51,7 +51,7 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClick, mediaAvaliacoes }) => (
+const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClick, mediaAvaliacoes, session, isUserAdmin }) => (
     <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md">
         <div className="flex items-center justify-between mb-2">
             <div>
@@ -59,25 +59,30 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClic
                 <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p> {/* Exibe a média */}
             </div>
             <div className="flex space-x-2">
-                <button 
-                    // ainda falta passar o userId
-                    onClick={() => handleAvaliarClick(item.id)} 
-                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
-                    Avaliar
-                </button>
-                <button
-                    onClick={() => editarDados(item.id)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
-                >
-                    Editar
-                </button>
+                {session && ( // Renderiza o botão apenas se o usuário estiver logado
+                    <button
+                        onClick={() => handleAvaliarClick(item.id)}
+                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 items-center">
+                        Avaliar
+                    </button>
+                )}
+                {session && isUserAdmin && (
+                    <>
+                        <button
+                            onClick={() => editarDados(item.id)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 flex items-center"
+                        >
+                            Editar
+                        </button>
 
-                <button
-                    onClick={() => apagarDados(item.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 flex items-center space-x-2"
-                >
-                    Apagar
-                </button>
+                        <button
+                            onClick={() => apagarDados(item.id)}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 flex items-center"
+                        >
+                            Apagar
+                        </button>
+                    </>
+            )}
 
             </div>
         </div>
@@ -114,8 +119,7 @@ const Cardapio = () => {
     const [userId, setUserId] = useState("");
 
     const [avaliacoes, setAvaliacoes] = useState([]);
-
-    
+    const [isUserAdmin, setIsUserAdmin] = useState(false);
 
     const url = "http://localhost:9081/";
 
@@ -137,6 +141,30 @@ const Cardapio = () => {
             .then(response => setAvaliacoes(response.data))
             .catch(err => console.log(err));
     }, []);
+
+    useEffect(() => {
+        // Função para verificar o perfil do usuário
+        const checkIfUserIsAdmin = async () => {
+            if (session && session.user) {
+                try {
+                    const response = await fetch(`${url}usuarios/${session.user.id}`);
+                    const data = await response.json();
+
+                    const perfil = data.perfil.trim();
+
+                    if (perfil === "admin") {
+                        setIsUserAdmin(true); // Define como true se o perfil for admin
+                    } else {
+                        setIsUserAdmin(false); // Caso contrário, false
+                    }
+                } catch (err) {
+                    console.log("Erro ao buscar usuário:", err);
+                }
+            }
+        };
+
+        checkIfUserIsAdmin();
+    }, [session]); // O useEffect depende da sessão para rodar
 
     const fetchItens = async (cardapioId) => {
         try {
@@ -297,6 +325,8 @@ const Cardapio = () => {
                             itens={itensPorCardapio[item.id]}
                             handleAvaliarClick={handleAvaliarClick}
                             mediaAvaliacoes={calcularMediaAvaliacoes}
+                            session={session}
+                            isUserAdmin={isUserAdmin}
                         />
                     ))
                 ) : (

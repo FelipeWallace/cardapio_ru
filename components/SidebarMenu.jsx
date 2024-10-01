@@ -40,7 +40,7 @@ const SidebarMenu = () => {
     }
 
     return (
-        <div className="flex">
+        <div className="flex z-50">
             {/* Menu lateral - visível em telas grandes */}
             <div
                 onMouseEnter={() => setIsOpen(true)}  // Abrir o menu ao passar o mouse

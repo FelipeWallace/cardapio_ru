@@ -1,5 +1,4 @@
 import Cardapio from "@components/Cardapio";
-import CardapioTeste from "@components/CardapioTeste";
 
 const Home = () => {
   
@@ -12,8 +11,7 @@ const Home = () => {
            <br className="max-md:hidden" />
            <span className="orange_gradient text-center">Cardápio de {today.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long' })}</span>
         </h1>
-        {/* <Cardapio /> */}
-        <CardapioTeste />
+        <Cardapio />
     </section>
   )
 }

@@ -1,30 +1,49 @@
-// Pode ser que seja util deixar o usuário definir a data
-// transformar em componente
-
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSession, signIn } from 'next-auth/react';
 import axios from 'axios';
-
 import '@styles/globals.css';
 
 const Avisos = () => {
+  const { data: session, status } = useSession();
   const [avisos, setAvisos] = useState([]);
   const [data, setData] = useState('');
   const [aviso, setAviso] = useState('');
   const [tipo, setTipo] = useState('');
   const [Usuarios_ID, setUsuariosID] = useState('');
   const [editingId, setEditingId] = useState(null);
-
-  const url = 'http://localhost:9081/avisos';
+  const [isUserAdmin, setIsUserAdmin] = useState(false); // Para armazenar se o usuário é admin
+  const url = 'http://localhost:9081/';
 
   useEffect(() => {
-    fetchAvisos();
-  }, []);
+    const checkIfUserIsAdmin = async () => {
+      if (session && session.user) {
+        try {
+          const response = await fetch(`${url}usuarios/${session.user.id}`);
+          const data = await response.json();
+
+          const perfil = data.perfil.trim();
+
+          setIsUserAdmin(perfil === "admin"); // Define como true se o perfil for admin
+        } catch (err) {
+          console.log("Erro ao buscar usuário:", err);
+        }
+      }
+    };
+
+    checkIfUserIsAdmin();
+  }, [session]);
+
+  useEffect(() => {
+    if (isUserAdmin) {
+      fetchAvisos(); // Somente busca avisos se o usuário for admin
+    }
+  }, [isUserAdmin]);
 
   const fetchAvisos = async () => {
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url + 'avisos');
       setAvisos(response.data);
     } catch (error) {
       console.error('Erro ao buscar avisos:', error);
@@ -38,9 +57,9 @@ const Avisos = () => {
 
     try {
       if (editingId) {
-        await axios.put(`${url}/${editingId}`, { data: dataAtual, aviso, tipo, Usuarios_ID });
+        await axios.put(`${url}avisos/${editingId}`, { data: dataAtual, aviso, tipo, Usuarios_ID });
       } else {
-        await axios.post(url, { data: dataAtual, aviso, tipo, Usuarios_ID });
+        await axios.post(`${url}avisos/`, { data: dataAtual, aviso, tipo, Usuarios_ID });
       }
       setData('');
       setAviso('');
@@ -63,7 +82,7 @@ const Avisos = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`${url}/${id}`);
+      await axios.delete(`${url}avisos/${id}`);
       fetchAvisos();
     } catch (error) {
       console.error('Erro ao deletar aviso:', error);
@@ -87,20 +106,36 @@ const Avisos = () => {
         return "bg-gray-100"; // Cor padrão
     }
   };
-  
+
+  // Verifica o status da sessão
+  if (status === 'loading') {
+    return <p>Carregando...</p>;
+  }
+
+  if (status === 'unauthenticated' || !session) {
+    return (
+      <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
+        <p className="text-red-500">Você precisa estar logado para acessar esta página.</p>
+        <button onClick={() => signIn()} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Fazer login
+        </button>
+      </div>
+    );
+  }
+
+  // Verifica se o usuário é admin
+  if (!isUserAdmin) {
+    return (
+      <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
+        <p className="text-red-500">Você não tem permissão para acessar esta página.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-center">Avisos</h2>
       <form onSubmit={handleSubmit} className="mb-4">
-        {/* <input
-          type="date"
-          placeholder="Data"
-          value={data}
-          onChange={(e) => setData(e.target.value)}
-          required
-          className="border border-gray-300 p-2 rounded w-full mb-2"
-        /> */}
         <textarea
           type="text"
           placeholder="Aviso"
@@ -170,7 +205,6 @@ const Avisos = () => {
       </ul>
     </div>
   );
-
 };
 
 export default Avisos;

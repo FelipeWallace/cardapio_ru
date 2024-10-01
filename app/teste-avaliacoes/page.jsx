@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import StarRating from "@components/StarRating";
+import Notification from "@components/Notification";
 
 const Avaliacoes = () => {
     const [avaliacoes, setAvaliacoes] = useState([]);
@@ -120,11 +121,9 @@ const Avaliacoes = () => {
 
     return (
         <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
-            {/* Exibe a mensagem de erro se houver */}
-            {errorMessage && <div className="bg-red-100 text-red-800 p-2 mb-4 rounded">{errorMessage}</div>}
-            
-            {/* Exibe a mensagem de sucesso se houver */}
-            {successMessage && <div className="bg-green-100 text-green-800 p-2 mb-4 rounded">{successMessage}</div>}
+
+            <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
+            <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
 
             <h2 className="text-2xl font-bold mb-4 text-center">Avaliações</h2>
             <p className="text-lg font-semibold mb-4 text-center">{`Média das Avaliações: ${calcularMediaAvaliacoes()} estrelas`}</p>

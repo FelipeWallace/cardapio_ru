@@ -5,6 +5,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import AdminGuard from "@components/AdminGuard";
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -79,7 +80,8 @@ const Usuarios = () => {
     };
 
     return (
-        <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
+        <AdminGuard>
+            <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
             <h2 className="text-2xl font-bold mb-4 text-center">Usuários</h2>
             <form onSubmit={handleSubmit} className="mb-4">
                 <input 
@@ -139,6 +141,7 @@ const Usuarios = () => {
                 ))}
             </ul>
         </div>
+        </AdminGuard>
     );
 };
 

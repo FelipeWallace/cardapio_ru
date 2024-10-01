@@ -6,7 +6,10 @@ import Provider from '@components/Provider';
 
 export const metadata = {
     title: 'Restaurante Universitário da Unifei',
-    description: 'Cardapio do Restaurante Universitário da Unifei'
+    description: 'Cardapio do Restaurante Universitário da Unifei',
+    icons: {
+        icon: 'assets/images/logo.svg',
+      },
 }
 
 const RootLayout = ({ children }) => {

@@ -12,7 +12,7 @@ const Usuarios = () => {
     const [id, setId] = useState("");
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [foto, setFoto] = useState("");
     const [perfil, setPerfil] = useState("");
 
     const url = "http://localhost:9081/";
@@ -26,7 +26,7 @@ const Usuarios = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const userData = { nome, email, senha, perfil};
+        const userData = { nome, email, foto, perfil};
         if (id) {
             // Atualizar usuário existente
             axios.put(`${url}usuarios/${id}`, userData)
@@ -67,7 +67,7 @@ const Usuarios = () => {
         setId(usuario.id);
         setNome(usuario.nome);
         setEmail(usuario.email);
-        setSenha(usuario.senha);
+        setFoto(usuario.foto);
         setPerfil(usuario.perfil);
     };
 
@@ -75,7 +75,7 @@ const Usuarios = () => {
         setId("");
         setNome("");
         setEmail("");
-        setSenha("");
+        setFoto("");
         setPerfil("");
     };
 
@@ -101,10 +101,10 @@ const Usuarios = () => {
                     required 
                 />
                 <input 
-                    type="password" 
-                    value={senha} 
-                    onChange={(e) => setSenha(e.target.value)} 
-                    placeholder="Senha" 
+                    type="text" 
+                    value={foto} 
+                    onChange={(e) => setFoto(e.target.value)} 
+                    placeholder="Foto" 
                     className="border border-gray-300 p-2 rounded w-full mb-2"
                     required 
                 />

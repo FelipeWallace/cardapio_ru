@@ -50,13 +50,13 @@ const handler = NextAuth({
 
         // Caso o usuário não exista, criar um novo registro
         const insertQuery = `
-          INSERT INTO usuarios (nome, email, senha, perfil)
+          INSERT INTO usuarios (nome, email, foto, perfil)
           VALUES ($1, $2, $3, 'user') RETURNING *;
         `;
         const insertValues = [
           profile.name,
           profile.email,
-          profile.picture, // URL da imagem de perfil
+          profile.picture,
         ];
 
         const insertResult = await pool.query(insertQuery, insertValues);

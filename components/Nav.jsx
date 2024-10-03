@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import Avisos from "./Avisos";
 
 const Nav = () => {
   const { data: session } = useSession();
@@ -33,6 +34,9 @@ const Nav = () => {
 
       {/* Desktop */}
       <div className='sm:flex hidden'>
+        <div className='mr-5'>
+          <Avisos />
+        </div>
         {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
             {/* <Link href='/create-prompt' className='black_btn'>
@@ -44,11 +48,11 @@ const Nav = () => {
             </button>
 
             <Image
-                src={session?.user.image}
-                width={37}
-                height={37}
-                className='rounded-full'
-                alt='profile'
+              src={session?.user.image}
+              width={37}
+              height={37}
+              className='rounded-full'
+              alt='profile'
             />
           </div>
         ) : (
@@ -72,6 +76,9 @@ const Nav = () => {
 
       {/* Mobile */}
       <div className='sm:hidden flex relative'>
+        <div className='mr-5'>
+          <Avisos />
+        </div>
         {session?.user ? (
           <div className='flex'>
             <Image

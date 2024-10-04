@@ -6,6 +6,8 @@ import AvaliacoesModal from "@components/AvaliacoesModal";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { addDays, subDays } from 'date-fns';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
 const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, session }) => (
@@ -146,15 +148,17 @@ const Cardapio = () => {
             <div className="flex justify-between items-center mb-4">
                 <button
                     onClick={handlePreviousDay}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                    className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
                 >
-                    ← Dia Anterior
+                    <FontAwesomeIcon icon={faChevronLeft} className="mr-2" />
+                    Dia Anterior
                 </button>
                 <button
                     onClick={handleNextDay}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                    className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
                 >
-                    Próximo Dia →
+                    Próximo Dia
+                    <FontAwesomeIcon icon={faChevronRight} className="ml-2" />
                 </button>
             </div>
             {loading ? (

@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import '@styles/globals.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
-
 
 const Avisos = () => {
     const [avisos, setAvisos] = useState([]);
@@ -38,9 +36,11 @@ const Avisos = () => {
         return daysDifference;
     };
 
-    // Função para filtrar avisos com menos de 7 dias
+    // Função para filtrar avisos recentes (menos de 7 dias e não futuros)
     const avisosRecentes = avisos.filter((aviso) => {
-        return getDaysDifference(aviso.data) <= 7;
+        const avisoDate = new Date(aviso.data);
+        const currentDate = new Date();
+        return (avisoDate <= currentDate) && (getDaysDifference(aviso.data) <= 7);
     });
 
     const checkForTodayNotifications = (avisos) => {
@@ -88,7 +88,7 @@ const Avisos = () => {
 
             {/* Lista de avisos expansível */}
             {isExpanded && (
-                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg">
+                <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-40">
                     <h3 className="text-lg font-semibold p-4 bg-gray-100 border-b">Avisos</h3>
                     <ul className="list-none space-y-4 p-4 max-h-64 overflow-y-auto">
                         {avisosRecentes.length > 0 ? (
@@ -104,7 +104,7 @@ const Avisos = () => {
                                         >
                                             <div>
                                                 <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
-                                                <p className="text-gray-500">{aviso.aviso}</p>
+                                                <p className="font-semibold text-gray-600">{aviso.aviso}</p>
                                                 <p className="text-gray-400 text-sm">{`Publicado em: ${new Date(aviso.data).toLocaleDateString()}`}</p>
                                             </div>
                                         </li>

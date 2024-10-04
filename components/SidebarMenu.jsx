@@ -3,6 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faUtensils,
+    faBox,
+    faPlus,
+    faMinus,
+    faUsers,
+    faStar,
+    faExclamationTriangle,
+    faBars,
+    faTimes
+} from '@fortawesome/free-solid-svg-icons';
 
 const SidebarMenu = () => {
     const { data: session } = useSession();
@@ -35,8 +47,8 @@ const SidebarMenu = () => {
         checkIfUserIsAdmin();
     }, [session]);
 
-    if (!isUserAdmin){
-        return false
+    if (!isUserAdmin) {
+        return false;
     }
 
     return (
@@ -56,12 +68,12 @@ const SidebarMenu = () => {
                         {/* Lista de links */}
                         <li>
                             <Link href="/teste-cardapio" className="hover:bg-gray-700 p-2 rounded block transition-colors">
-                                {isOpen ? "Cardápio" : <span className="text-center">🍽️</span>}
+                                {isOpen ? "Cardápio" : <FontAwesomeIcon icon={faUtensils} className="text-white" />}
                             </Link>
                         </li>
                         <li>
                             <Link href="/item" className="hover:bg-gray-700 p-2 rounded block transition-colors">
-                                {isOpen ? "Gerenciar Itens" : <span className="text-center">📦</span>}
+                                {isOpen ? "Gerenciar Itens" : <FontAwesomeIcon icon={faBox} className="text-white" />}
                             </Link>
                         </li>
                         <li>
@@ -69,7 +81,7 @@ const SidebarMenu = () => {
                                 href="/teste-add"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
-                                {isOpen ? "Adicionar Itens" : <span className="text-center">➕</span>}
+                                {isOpen ? "Adicionar Itens" : <FontAwesomeIcon icon={faPlus} className="text-white" />}
                             </Link>
                         </li>
                         <li>
@@ -77,7 +89,7 @@ const SidebarMenu = () => {
                                 href="/teste-rmv"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
-                                {isOpen ? "Remover Itens" : <span className="text-center">➖</span>}
+                                {isOpen ? "Remover Itens" : <FontAwesomeIcon icon={faMinus} className="text-white" />}
                             </Link>
                         </li>
                         <li>
@@ -85,7 +97,7 @@ const SidebarMenu = () => {
                                 href="/teste-usuarios"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
-                                {isOpen ? "Usuários" : <span className="text-center">👤</span>}
+                                {isOpen ? "Usuários" : <FontAwesomeIcon icon={faUsers} className="text-white" />}
                             </Link>
                         </li>
                         <li>
@@ -93,7 +105,7 @@ const SidebarMenu = () => {
                                 href="/teste-avaliacoes"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
-                                {isOpen ? "Avaliações" : <span className="text-center">⭐</span>}
+                                {isOpen ? "Avaliações" : <FontAwesomeIcon icon={faStar} className="text-white" />}
                             </Link>
                         </li>
                         <li>
@@ -101,7 +113,7 @@ const SidebarMenu = () => {
                                 href="/teste-avisos"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
-                                {isOpen ? "Avisos" : <span className="text-center">⚠️</span>}
+                                {isOpen ? "Avisos" : <FontAwesomeIcon icon={faExclamationTriangle} className="text-white" />}
                             </Link>
                         </li>
                     </ul>
@@ -112,19 +124,15 @@ const SidebarMenu = () => {
             <div className="lg:hidden fixed top-4 left-4 z-50">
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="text-white focus:outline-none"
+                    className="focus:outline-none"
                 >
                     {/* Ícone do menu hambúrguer */}
-                    <svg
-                        className="w-8 h-8"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
+                    <FontAwesomeIcon
+                        icon={faBars}
+                        className={`w-8 h-8 ${isMobileMenuOpen ? 'text-white' : 'text-black'}`} // Muda a cor com base no estado do menu
+                    />
                 </button>
+
             </div>
 
             {/* Menu lateral mobile - visível apenas em telas pequenas */}
@@ -135,15 +143,7 @@ const SidebarMenu = () => {
                         className="text-white absolute top-4 right-4 focus:outline-none"
                     >
                         {/* Ícone para fechar o menu */}
-                        <svg
-                            className="w-8 h-8"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
+                        <FontAwesomeIcon icon={faTimes} className="w-8 h-8" />
                     </button>
                     <nav className="flex-1 mt-10">
                         <ul className="space-y-4">
@@ -162,7 +162,7 @@ const SidebarMenu = () => {
                                     href="/teste-add"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
-                                    {isOpen ? "Adicionar Itens" : <span className="text-center">➕</span>}
+                                    Adicionar Itens
                                 </Link>
                             </li>
                             <li>
@@ -170,7 +170,7 @@ const SidebarMenu = () => {
                                     href="/teste-rmv"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
-                                    {isOpen ? "Remover Itens" : <span className="text-center">➖</span>}
+                                    Remover Itens
                                 </Link>
                             </li>
                             <li>
@@ -178,7 +178,7 @@ const SidebarMenu = () => {
                                     href="/teste-usuarios"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
-                                    {isOpen ? "Usuários" : <span className="text-center">👤</span>}
+                                    Usuários
                                 </Link>
                             </li>
                             <li>
@@ -186,7 +186,7 @@ const SidebarMenu = () => {
                                     href="/teste-avaliacoes"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
-                                    {isOpen ? "Avaliações" : <span className="text-center">⭐</span>}
+                                    Avaliações
                                 </Link>
                             </li>
                             <li>
@@ -194,7 +194,7 @@ const SidebarMenu = () => {
                                     href="/teste-avisos"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
-                                    {isOpen ? "Avisos" : <span className="text-center">⚠️</span>}
+                                    Avisos
                                 </Link>
                             </li>
                         </ul>

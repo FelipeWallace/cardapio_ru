@@ -302,7 +302,7 @@ const Cardapio = () => {
             )}
             <div className="mb-4">
                 <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
-                    Selecione uma data:
+                    Filtre por uma data:
                 </label>
                 <input
                     id="datePicker"

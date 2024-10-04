@@ -1,22 +1,20 @@
-// Deixar usuário definir a data usando exemplo do cardapio 
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useSession } from "next-auth/react";
 import AdminGuard from '@components/AdminGuard';
 import axios from 'axios';
-import '@styles/globals.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Avisos = () => {
   const { data: session } = useSession();
-
   const [avisos, setAvisos] = useState([]);
   const [data, setData] = useState('');
   const [aviso, setAviso] = useState('');
   const [tipo, setTipo] = useState('');
-  // const [Usuarios_ID, setUsuariosID] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const [showForm, setShowForm] = useState(false);
   const url = 'http://localhost:9081/';
 
   useEffect(() => {
@@ -35,18 +33,17 @@ const Avisos = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const dataAtual = new Date();
-
     try {
       if (editingId) {
-        await axios.put(`${url}avisos/${editingId}`, { data: dataAtual, aviso, tipo, Usuarios_ID: session?.user.id });
+        await axios.put(`${url}avisos/${editingId}`, { data, aviso, tipo, Usuarios_ID: session?.user.id });
       } else {
-        await axios.post(`${url}avisos/`, { data: dataAtual, aviso, tipo, Usuarios_ID: session?.user.id});
+        await axios.post(`${url}avisos/`, { data, aviso, tipo, Usuarios_ID: session?.user.id });
       }
       setAviso('');
       setTipo('');
-      // setUsuariosID('');
+      setData(null);
       setEditingId(null);
+      setShowForm(false); // Fecha o formulário após salvar
       fetchAvisos();
     } catch (error) {
       console.error('Erro ao salvar aviso:', error);
@@ -57,7 +54,8 @@ const Avisos = () => {
     setEditingId(aviso.id);
     setAviso(aviso.aviso);
     setTipo(aviso.tipo);
-    // setUsuariosID(session?.user.id);
+    setData(aviso.data);
+    setShowForm(true);
   };
 
   const handleDelete = async (id) => {
@@ -73,17 +71,17 @@ const Avisos = () => {
     const tipoAviso = tipo.trim();
     switch (tipoAviso) {
       case "Importante":
-        return "bg-red-200";
+        return "bg-red-300";
       case "Urgente":
-        return "bg-yellow-200";
+        return "bg-yellow-300";
       case "Informação":
         return "bg-blue-200";
       case "Alerta":
-        return "bg-orange-200";
+        return "bg-orange-300";
       case "Promoção":
         return "bg-green-200";
       default:
-        return "bg-gray-100";
+        return "bg-gray-200";
     }
   };
 
@@ -91,69 +89,89 @@ const Avisos = () => {
     <AdminGuard>
       <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Avisos</h2>
-        <form onSubmit={handleSubmit} className="mb-4">
-          <textarea
-            type="text"
-            placeholder="Aviso"
-            value={aviso}
-            onChange={(e) => setAviso(e.target.value)}
-            required
-            className="border border-gray-300 p-2 rounded w-full mb-2"
-          />
-          <select
-            value={tipo}
-            onChange={(e) => setTipo(e.target.value)}
-            required
-            className="border border-gray-300 p-2 rounded w-full mb-2"
-          >
-            <option value="" disabled>Selecione o tipo de aviso</option>
-            <option value="Importante">Importante</option>
-            <option value="Urgente">Urgente</option>
-            <option value="Informação">Informação</option>
-            <option value="Alerta">Alerta</option>
-            <option value="Promoção">Promoção</option>
-          </select>
-          {/* <input
-            type="number"
-            placeholder="Usuário ID"
-            value={Usuarios_ID}
-            onChange={(e) => setUsuariosID(e.target.value)}
-            required
-            className="border border-gray-300 p-2 rounded w-full mb-2"
-          /> */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            {editingId ? 'Atualizar' : 'Criar'}
-          </button>
-        </form>
+
+        {/* Botão para abrir o formulário de criação */}
+        <button
+          onClick={() => {
+            setShowForm(true); // Abre o formulário de criação
+            setEditingId(null); // Reseta o estado de edição
+            setAviso('');
+            setTipo('');
+            setData('');
+          }}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 mb-4 flex items-center"
+        >
+          <FontAwesomeIcon icon={faPlus} className="mr-2" />
+          Criar Aviso
+        </button>
+
+        {/* Formulário de criação/edição */}
+        {showForm && (
+          <form onSubmit={handleSubmit} className="mb-4">
+            <textarea
+              type="text"
+              placeholder="Aviso"
+              value={aviso}
+              onChange={(e) => setAviso(e.target.value)}
+              required
+              className="border border-gray-300 p-2 rounded w-full mb-2"
+            />
+            <select
+              value={tipo}
+              onChange={(e) => setTipo(e.target.value)}
+              required
+              className="border border-gray-300 p-2 rounded w-full mb-2"
+            >
+              <option value="" disabled>Selecione o tipo de aviso</option>
+              <option value="Importante">Importante</option>
+              <option value="Urgente">Urgente</option>
+              <option value="Informação">Informação</option>
+              <option value="Alerta">Alerta</option>
+              <option value="Promoção">Promoção</option>
+            </select>
+            <input
+              type="date"
+              name="txtData"
+              value={data}
+              onChange={(e) => setData(e.target.value)}
+              className="border border-gray-300 p-2 rounded w-full mb-2"
+            />
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+            >
+              {editingId ? 'Atualizar' : 'Criar'}
+            </button>
+          </form>
+        )}
+
+        {/* Lista de avisos */}
         <ul className="list-none space-y-4">
           {avisos
             .sort((a, b) => new Date(b.data) - new Date(a.data)) // Ordenação por data decrescente
             .map((aviso) => (
               <li
                 key={aviso.id}
-                className={`mb-2 flex justify-between items-center p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out ${getBackgroundColor(aviso.tipo)}`}
+                className={`relative mb-2 p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out ${getBackgroundColor(aviso.tipo)}`}
               >
-                <div>
-                  <strong className="text-lg font-semibold text-gray-700">{aviso.aviso}</strong>
-                  <p className="text-gray-500">{`Tipo: ${aviso.tipo}`}</p>
-                  <p className="text-gray-500">{`Data: ${aviso.data}`}</p>
+                <div className="mb-8">
+                  <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
+                  <p className="font-semibold text-gray-600">{aviso.aviso}</p>
+                  <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString()}`}</p>
                   <p className="text-gray-400 text-sm">{`ID do Usuário: ${aviso.usuarios_id}`}</p>
                 </div>
-                <div className="flex space-x-4">
+                <div className="absolute bottom-4 right-4 flex space-x-4">
                   <button
                     onClick={() => handleEdit(aviso)}
                     className="text-blue-500 hover:text-blue-700"
                   >
-                    Editar
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
                     onClick={() => handleDelete(aviso.id)}
                     className="text-red-500 hover:text-red-700"
                   >
-                    Excluir
+                    <FontAwesomeIcon icon={faTrashAlt} />
                   </button>
                 </div>
               </li>

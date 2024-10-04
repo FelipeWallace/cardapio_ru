@@ -27,9 +27,9 @@ const Nav = () => {
           alt='logo'
           width={30}
           height={30}
-          className='object-contain'
+          className='object-contain hidden sm:block' // Oculte em telas menores que sm
         />
-        <p className='logo_text'>Restaurante Universitário</p>
+        <p className='logo_text hidden sm:block'>Restaurante Universitário</p> {/* Oculte o texto em telas menores que sm */}
       </Link>
 
       {/* Desktop */}
@@ -39,14 +39,9 @@ const Nav = () => {
         </div>
         {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
-            {/* <Link href='/create-prompt' className='black_btn'>
-              Create Post
-            </Link> */}
-
             <button type='button' onClick={signOut} className='outline_btn'>
               Sair
             </button>
-
             <Image
               src={session?.user.image}
               width={37}
@@ -89,23 +84,8 @@ const Nav = () => {
               alt='profile'
               onClick={() => setToggleDropdown(!toggleDropdown)}
             />
-
             {toggleDropdown && (
               <div className='dropdown'>
-                {/* <Link
-                  href='/profile'
-                  className='dropdown_link'
-                  onClick={() => setToggleDropdown(false)}
-                >
-                  My Profile
-                </Link>
-                <Link
-                  href='/create-prompt'
-                  className='dropdown_link'
-                  onClick={() => setToggleDropdown(false)}
-                >
-                  Create Prompt
-                </Link> */}
                 <button
                   type='button'
                   onClick={() => {
@@ -138,6 +118,7 @@ const Nav = () => {
         )}
       </div>
     </nav>
+
   );
 };
 

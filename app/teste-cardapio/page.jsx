@@ -1,9 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import AdminGuard from "@components/AdminGuard";
+import Notification from "@components/Notification";
 import axios from "axios";
-import AvaliacoesModal from "@components/AvaliacoesModal";
-import { useSession } from "next-auth/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
@@ -51,59 +54,56 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, editarDados, apagarDados, itens, handleAvaliarClick, mediaAvaliacoes, session, isUserAdmin }) => (
-    <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md">
+const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => (
+    <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
         <div className="flex items-center justify-between mb-2">
             <div>
                 {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
                 <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p> {/* Exibe a média */}
             </div>
-            <div className="flex space-x-2">
-                {session && ( // Renderiza o botão apenas se o usuário estiver logado
-                    <button
-                        onClick={() => handleAvaliarClick(item.id)}
-                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 transition duration-300 items-center">
-                        Avaliar
-                    </button>
-                )}
-                {session && isUserAdmin && (
-                    <>
-                        <button
-                            onClick={() => editarDados(item.id)}
-                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 flex items-center"
-                        >
-                            Editar
-                        </button>
-
-                        <button
-                            onClick={() => apagarDados(item.id)}
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 transition duration-300 flex items-center"
-                        >
-                            Apagar
-                        </button>
-                    </>
-            )}
-
-            </div>
         </div>
         {itens && itens.length > 0 ? (
-            <ul className="ml-4 list-disc">
+            <ul className="ml-4 list-disc space-y-4">
                 {itens.map(subItem => (
-                    <li key={subItem.id} className="mb-2">
-                        <strong>{subItem.nome}</strong>
-                        <p className="text-gray-600">{subItem.descricao}</p>
+                    <li key={subItem.id} className="flex items-center mb-4 space-x-4">
+                        {/* Imagem do item à esquerda */}
+                        <Image
+                            src="assets/images/logo.svg"
+                            width={40}
+                            height={40}
+                            className="object-contain"
+                            alt={subItem.nome}
+                        />
+
+                        {/* Nome e descrição à direita */}
+                        <div className="flex flex-col">
+                            <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
+                            <p className="text-sm text-gray-600">{subItem.descricao}</p>
+                        </div>
                     </li>
                 ))}
             </ul>
         ) : (
             <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
         )}
+        <div className="absolute bottom-4 right-4 flex space-x-4">
+            <button
+                onClick={() => editarDados(item.id)}
+                className="text-blue-500 hover:text-blue-700 transition duration-300 flex items-center"
+            >
+                <FontAwesomeIcon icon={faEdit} className="mr-1" />
+            </button>
+            <button
+                onClick={() => apagarDados(item.id)}
+                className="text-red-500 hover:text-red-700 transition duration-300 flex items-center"
+            >
+                <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
+            </button>
+        </div>
     </div>
 );
 
 const Cardapio = () => {
-    const { data: session } = useSession();
-
     const [cardapio, setCardapio] = useState([]);
     const [id, setId] = useState("");
     const [data, setData] = useState(null);
@@ -113,13 +113,10 @@ const Cardapio = () => {
     const [dataSelecionada, setDataSelecionada] = useState("");
     const [tipo, setTipo] = useState("");
     const [loading, setLoading] = useState(false);
-
-    const [selectedCardapioId, setSelectedCardapioId] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [userId, setUserId] = useState("");
-
     const [avaliacoes, setAvaliacoes] = useState([]);
-    const [isUserAdmin, setIsUserAdmin] = useState(false);
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
 
     const url = "http://localhost:9081/";
 
@@ -141,30 +138,6 @@ const Cardapio = () => {
             .then(response => setAvaliacoes(response.data))
             .catch(err => console.log(err));
     }, []);
-
-    useEffect(() => {
-        // Função para verificar o perfil do usuário
-        const checkIfUserIsAdmin = async () => {
-            if (session && session.user) {
-                try {
-                    const response = await fetch(`${url}usuarios/${session.user.id}`);
-                    const data = await response.json();
-
-                    const perfil = data.perfil.trim();
-
-                    if (perfil === "admin") {
-                        setIsUserAdmin(true); // Define como true se o perfil for admin
-                    } else {
-                        setIsUserAdmin(false); // Caso contrário, false
-                    }
-                } catch (err) {
-                    console.log("Erro ao buscar usuário:", err);
-                }
-            }
-        };
-
-        checkIfUserIsAdmin();
-    }, [session]); // O useEffect depende da sessão para rodar
 
     const fetchItens = async (cardapioId) => {
         try {
@@ -213,25 +186,41 @@ const Cardapio = () => {
     };
 
     // Função para excluir o cardápio e remover os itens relacionados
-    const apagarDados = (cardapioId) => {
+    const apagarDados = async (cardapioId) => {
+        setErrorMessage("");
+        setSuccessMessage("");
+
         try {
+            // Primeiro, verificar se o cardápio já foi avaliado
+            const urlAvaliado = `${url}cardapio/${cardapioId}/avaliado`;
+            const response = await axios.get(urlAvaliado);
+
+            if (response.data.foiAvaliado) {
+                // Se o cardápio já foi avaliado, exibir uma mensagem ao usuário e interromper o processo
+                setErrorMessage("Não é possível excluir este cardápio, pois ele já foi avaliado.");
+                return; // Interrompe a função
+            }
+
+            // Se não houver avaliações, continuar com a exclusão
             // Primeiro, excluir todos os itens relacionados ao cardápio
             const urlItens = `${url}cardapio/${cardapioId}/itens`;
-            axios.delete(urlItens); // Requisição DELETE para remover itens
-    
+            await axios.delete(urlItens); // Requisição DELETE para remover itens
+
             // Depois de excluir os itens, excluir o cardápio
             const urlCardapio = `${url}cardapio/${cardapioId}`;
-            axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
-    
+            await axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
+
             // Atualizar a lista de cardápios no frontend após a exclusão
-            setCardapio(cardapio.filter(item => item.id !== cardapioId));
-    
-            console.log("Cardápio e seus itens foram removidos com sucesso!");
+            setCardapio((prevCardapios) => prevCardapios.filter(item => item.id !== cardapioId));
+
+            SetSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
         } catch (error) {
-            console.error("Erro ao remover o cardápio e seus itens:", error);
+            SetErrorMessage("Erro ao remover o cardápio e seus itens:");
         }
     };
-    
+
+
+
     const gravaDados = () => {
         if (data && refeicao && titulo) {
             if (tipo === "novo") {
@@ -261,16 +250,6 @@ const Cardapio = () => {
         limparDados();
     };
 
-    const handleAvaliarClick = (id) => {
-        setSelectedCardapioId(id);
-        setUserId(session?.user.id);
-        setIsModalOpen(true); // Abre o modal
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false); // Fecha o modal
-    };
-
     const calcularMediaAvaliacoes = (cardapioId) => {
         const avaliacoesDoCardapio = avaliacoes.filter(avaliacao => avaliacao.cardapio_id === cardapioId);
         if (avaliacoesDoCardapio.length === 0) return "Sem avaliações"; // Caso não tenha avaliações
@@ -279,62 +258,66 @@ const Cardapio = () => {
     };
 
     return (
-        <div className="container mx-auto p-4">
-            <button
-                type="button"
-                onClick={novosDados}
-                className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 mb-4"
-            >
-                Novo Cardápio
-            </button>
-            {tipo && (
-                <CardapioForm
-                    tipo={tipo}
-                    data={data}
-                    refeicao={refeicao}
-                    titulo={titulo}
-                    setData={setData}
-                    setRefeicao={setRefeicao}
-                    setTitulo={setTitulo}
-                    limparDados={limparDados}
-                    gravaDados={gravaDados}
-                />
-            )}
-            <div className="mb-4">
-                <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
-                    Filtre por uma data:
-                </label>
-                <input
-                    id="datePicker"
-                    type="date"
-                    value={dataSelecionada}
-                    onChange={(e) => setDataSelecionada(e.target.value)}
-                    className="border border-gray-300 rounded px-3 py-2"
-                />
-            </div>
-            {loading ? (
-                <p>Carregando cardápios...</p>
-            ) : (
-                cardapiosFiltrados.length > 0 ? (
-                    cardapiosFiltrados.map((item) => (
-                        <CardapioItem
-                            key={item.id}
-                            item={item}
-                            editarDados={editarDados}
-                            apagarDados={apagarDados}
-                            itens={itensPorCardapio[item.id]}
-                            handleAvaliarClick={handleAvaliarClick}
-                            mediaAvaliacoes={calcularMediaAvaliacoes}
-                            session={session}
-                            isUserAdmin={isUserAdmin}
-                        />
-                    ))
+        <AdminGuard>
+            <div className="container mx-auto p-4">
+                {errorMessage &&
+                    <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
+                }
+                {successMessage &&
+                    <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
+                }
+                <button
+                    type="button"
+                    onClick={novosDados}
+                    className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-700 mb-4"
+                >
+                    Novo Cardápio
+                </button>
+                {tipo && (
+                    <CardapioForm
+                        tipo={tipo}
+                        data={data}
+                        refeicao={refeicao}
+                        titulo={titulo}
+                        setData={setData}
+                        setRefeicao={setRefeicao}
+                        setTitulo={setTitulo}
+                        limparDados={limparDados}
+                        gravaDados={gravaDados}
+                    />
+                )}
+                <div className="mb-4">
+                    <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
+                        Filtre por uma data:
+                    </label>
+                    <input
+                        id="datePicker"
+                        type="date"
+                        value={dataSelecionada}
+                        onChange={(e) => setDataSelecionada(e.target.value)}
+                        className="border border-gray-300 rounded px-3 py-2"
+                    />
+                </div>
+                {loading ? (
+                    <p>Carregando cardápios...</p>
                 ) : (
-                    <p>Nenhum cardápio encontrado.</p>
-                )
-            )}
-            {isModalOpen && <AvaliacoesModal cardapioId={selectedCardapioId} userId={userId} onClose={closeModal} />}
-        </div>
+                    cardapiosFiltrados.length > 0 ? (
+                        cardapiosFiltrados.map((item) => (
+                            <CardapioItem
+                                key={item.id}
+                                item={item}
+                                editarDados={editarDados}
+                                apagarDados={apagarDados}
+                                itens={itensPorCardapio[item.id]}
+                                mediaAvaliacoes={calcularMediaAvaliacoes}
+                            />
+                        ))
+                    ) : (
+                        <p>Nenhum cardápio encontrado.</p>
+                    )
+                )}
+            </div>
+        </AdminGuard>
     );
 };
 

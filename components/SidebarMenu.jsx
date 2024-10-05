@@ -121,7 +121,7 @@ const SidebarMenu = () => {
             </div>
 
             {/* Botão do burger menu - visível em telas pequenas */}
-            <div className="lg:hidden fixed top-4 left-4 z-50">
+            <div className="lg:hidden fixed top-4 left-4 z-40">
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="focus:outline-none"

@@ -21,7 +21,7 @@ const Notification = ({ message, type, clearMessage }) => {
     : 'bg-green-500 text-white';
 
   return (
-    <div className={`fixed top-4 right-4 p-4 rounded shadow-lg transition-transform duration-300 ${notificationStyle}`}>
+    <div className={`fixed top-4 right-4 p-4 rounded shadow-lg transition-transform duration-300 ${notificationStyle} z-50`}>
       {message}
     </div>
   );

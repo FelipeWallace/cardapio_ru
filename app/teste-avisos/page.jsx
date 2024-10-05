@@ -1,14 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from "next-auth/react";
 import AdminGuard from '@components/AdminGuard';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 const Avisos = () => {
-  const { data: session } = useSession();
   const [avisos, setAvisos] = useState([]);
   const [data, setData] = useState('');
   const [aviso, setAviso] = useState('');

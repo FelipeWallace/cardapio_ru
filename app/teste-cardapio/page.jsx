@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import AdminGuard from "@components/AdminGuard";
 import Notification from "@components/Notification";
+import AddItemModal from "@components/AddItemModal";
+import RemoveItemModal from "@components/RemoveItemModal";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
@@ -54,12 +56,32 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => (
-    <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
+const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => {
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+    const [isRmvModalOpen, setIsRmvModalOpen] = useState(false);
+
+    const handleAddModalOpen = () => {
+        setIsAddModalOpen(true);
+    };
+
+    const handleAddModalClose = () => {
+        setIsAddModalOpen(false);
+    };
+
+    const handleRmvModalOpen = () => {
+        setIsRmvModalOpen(true);
+    };
+
+    const handleRmvModalClose = () => {
+        setIsRmvModalOpen(false);
+    };
+
+    return (
+        <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
         <div className="flex items-center justify-between mb-2">
             <div>
                 {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
-                <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p> {/* Exibe a média */}
+                <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
             </div>
         </div>
         {itens && itens.length > 0 ? (
@@ -88,6 +110,18 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
         )}
         <div className="absolute bottom-4 right-4 flex space-x-4">
             <button
+                className="text-green-500 hover:text-green-700 transition duration-300 flex items-center"
+                onClick={handleAddModalOpen}
+            >
+                <FontAwesomeIcon icon={faPlus} className="mr-1" />
+            </button>
+            <button
+                className="text-orange-500 hover:text-orange-700 transition duration-300 flex items-center"
+                onClick={handleRmvModalOpen}
+            >
+                <FontAwesomeIcon icon={faMinus} className="mr-1" />
+            </button>
+            <button
                 onClick={() => editarDados(item.id)}
                 className="text-blue-500 hover:text-blue-700 transition duration-300 flex items-center"
             >
@@ -100,8 +134,22 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
                 <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
             </button>
         </div>
+        {/* Modais para adicionar e remover itens ao cardápio */}
+        {isAddModalOpen && (
+                <AddItemModal
+                    cardapioId={item.id} // Passa o ID do cardápio para o modal
+                    onClose={handleAddModalClose}
+                />
+            )}
+        {isRmvModalOpen && (
+                <RemoveItemModal
+                    cardapioId={item.id} // Passa o ID do cardápio para o modal
+                    onClose={handleRmvModalClose}
+                />
+            )}
     </div>
-);
+    )
+};
 
 const Cardapio = () => {
     const [cardapio, setCardapio] = useState([]);
@@ -213,12 +261,11 @@ const Cardapio = () => {
             // Atualizar a lista de cardápios no frontend após a exclusão
             setCardapio((prevCardapios) => prevCardapios.filter(item => item.id !== cardapioId));
 
-            SetSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
+            setSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
         } catch (error) {
-            SetErrorMessage("Erro ao remover o cardápio e seus itens:");
+            setErrorMessage("Erro ao remover o cardápio e seus itens:");
         }
     };
-
 
 
     const gravaDados = () => {

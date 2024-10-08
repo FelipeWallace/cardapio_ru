@@ -34,22 +34,19 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
         {itens && itens.length > 0 ? (
             <ul className="ml-4 list-disc space-y-4">
                 {itens.map(subItem => (
-                    <li key={subItem.id} className="flex items-center mb-4 space-x-4">
-                        {/* Imagem do item à esquerda */}
-                        <Image
-                            src="assets/images/logo.svg"
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                            alt={subItem.nome}
-                        />
-
-                        {/* Nome e descrição à direita */}
-                        <div className="flex flex-col">
-                            <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
-                            <p className="text-sm text-gray-600">{subItem.descricao}</p>
-                        </div>
-                    </li>
+                    <li key={subItem.id} className="flex items-center mb-4 space-x-4 transition duration-300 ease-in-out transform hover:bg-gray-200">
+                    {/* Imagem do item à esquerda */}
+                    <img
+                        src={"https://i.ibb.co/6Dk28Ky/1d28c51cfab73dfcd0e3fad6824f4e86.jpg"}
+                        alt={subItem.nome}
+                        className="object-contain rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
+                    />
+                    {/* Nome e descrição à direita */}
+                    <div className="flex flex-col">
+                        <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
+                        <p className="text-sm text-gray-600">{subItem.descricao}</p>
+                    </div>
+                </li>                
                 ))}
             </ul>
 

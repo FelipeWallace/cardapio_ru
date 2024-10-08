@@ -6,7 +6,7 @@ import { useSession, signIn } from 'next-auth/react';
 const AdminGuard = ({ children }) => {
     const { data: session, status } = useSession();
     const [isUserAdmin, setIsUserAdmin] = useState(null);
-    const url = 'http://localhost:9081/'; // Ajuste para sua URL correta
+    const url = 'http://localhost:9081/';
 
     useEffect(() => {
         const checkIfUserIsAdmin = async () => {
@@ -35,11 +35,13 @@ const AdminGuard = ({ children }) => {
 
     if (status === 'unauthenticated' || !session) {
         return (
-            <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
-                <p className="text-red-500">Você precisa estar logado para acessar esta página.</p>
-                <button onClick={() => signIn()} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Fazer login
-                </button>
+            <div className="p-6 max-w-md w-full bg-white rounded-lg shadow-md">
+                <p className="text-center text-red-500 mb-4">Você precisa estar logado para acessar esta página.</p>
+                <div className="flex justify-center">
+                    <button onClick={() => signIn()} className="bg-blue-500 text-white px-6 py-3 rounded-lg transition duration-300 ease-in-out transform hover:bg-blue-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        Fazer login
+                    </button>
+                </div>
             </div>
         );
     }

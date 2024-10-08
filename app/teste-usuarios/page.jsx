@@ -103,7 +103,6 @@ const Usuarios = () => {
                     onChange={(e) => setFoto(e.target.value)} 
                     placeholder="Foto" 
                     className="border border-gray-300 p-2 rounded w-full mb-2"
-                    required 
                 />
                 <select 
                     value={perfil} 

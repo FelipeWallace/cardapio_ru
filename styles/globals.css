@@ -137,7 +137,7 @@
 
 /* Nav Component */
 .logo_text {
-  @apply max-sm:hidden font-satoshi font-semibold text-lg text-black tracking-wide;
+  @apply max-sm:ml-8 font-satoshi font-bold text-lg text-black tracking-wide;
 }
 
 .dropdown {
@@ -167,4 +167,42 @@
 
 .flex-between {
   @apply flex justify-between items-center;
+}
+
+/* Adicionado por mim */
+/* Estilo personalizado para a versão exportada */
+.export-style {
+  background-color: white;  /* Cor de fundo customizada */
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.export-style div {
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.export-style h3 {
+  font-size: 1.5rem; /* Aumenta o tamanho da refeição e título */
+  font-weight: bold;
+}
+
+.export-style-imagem p {
+  font-size: 1.2rem; /* Aumenta a descrição dos itens */
+}
+
+.export-style-imagem li {
+  font-size: 1.1rem; /* Aumenta a descrição dos itens */
+}
+
+.export-style img {
+  border-radius: 10px;  /* Bordas arredondadas para as imagens */
+}
+
+.export-style ul {
+  list-style: none;  /* Remover bullets se necessário */
+}
+
+.export-style button {
+  display: none;  /* Esconder os botões */
 }

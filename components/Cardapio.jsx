@@ -3,60 +3,131 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AvaliacoesModal from "@components/AvaliacoesModal";
+import CardapioReviews from "./CardapioReviews";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import { addDays, subDays } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faShareAlt, faComment } from '@fortawesome/free-solid-svg-icons';
+import html2canvas from "html2canvas";
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, session }) => (
-    <div key={item.id} className="mt-6 mb-6 p-6 bg-white rounded-lg shadow-lg transition hover:shadow-xl transform hover:scale-105 duration-300 space-x-6">
-        <div className="flex items-center justify-between mb-4">
-            <div>
-                <h3 className="text-lg font-bold text-gray-800">
-                    {item.refeicao} - {item.titulo}
-                </h3>
-                <p className="text-sm text-gray-500">
-                    {`Média de Avaliações: `}
-                    <span className="text-orange-500 font-bold">{mediaAvaliacoes(item.id)}</span>
-                </p>
-            </div>
-            {session && ( // Renderiza o botão apenas se o usuário estiver logado
-                <button
-                    onClick={() => handleAvaliarClick(item.id)}
-                    className="bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center space-x-2"
-                >
-                    <span>Avaliar</span>
-                </button>
-            )}
-        </div>
-        {itens && itens.length > 0 ? (
-            <ul className="ml-4 list-disc space-y-4">
-                {itens.map(subItem => (
-                    <li key={subItem.id} className="flex items-center mb-4 space-x-4 transition duration-300 ease-in-out transform hover:bg-gray-200">
-                    {/* Imagem do item à esquerda */}
-                    <img
-                        src={"https://i.ibb.co/6Dk28Ky/1d28c51cfab73dfcd0e3fad6824f4e86.jpg"}
-                        alt={subItem.nome}
-                        className="object-contain rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
-                    />
-                    {/* Nome e descrição à direita */}
-                    <div className="flex flex-col">
-                        <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
-                        <p className="text-sm text-gray-600">{subItem.descricao}</p>
+const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, session }) => {
+    const [showReviews, setShowReviews] = useState(false);
+
+    const handleShowReviewsOpen = () => {
+        setShowReviews(true);
+    };
+
+    const handleShowReviewsClose = () => {
+        setShowReviews(false);
+    };
+    const handleShareImage = () => {
+        // Clonar a div do cardápio
+        const originalCardapioDiv = document.getElementById('cardapioDiv');
+        const clonedCardapioDiv = originalCardapioDiv.cloneNode(true);
+
+        // Remover os botões da versão clonada
+        const buttons = clonedCardapioDiv.querySelectorAll('button');
+        buttons.forEach(button => button.remove());
+
+        // Criar uma nova div temporária para conter o cardápio modificado
+        const exportContainer = document.createElement('div');
+        exportContainer.id = 'exportCardapioDiv';
+        exportContainer.style.position = 'fixed';
+        exportContainer.style.top = '-9999px';  // Esconder a div da visualização
+        document.body.appendChild(exportContainer);
+        exportContainer.appendChild(clonedCardapioDiv);
+
+        // Aplicar estilos customizados para a exportação (por exemplo, CSS específico)
+        clonedCardapioDiv.classList.add('export-style'); // Adicione uma classe CSS especial
+
+        // Gerar a imagem da versão clonada
+        html2canvas(exportContainer, { useCORS: true }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/jpeg', 1.0);
+            const link = document.createElement('a');
+            link.href = imgData;
+            link.download = 'cardapio.jpeg';
+            link.click();
+
+            // Remover a div temporária após gerar a imagem
+            document.body.removeChild(exportContainer);
+        }).catch((error) => {
+            console.error("Erro ao gerar a imagem do cardápio:", error);
+        });
+    };
+
+    return (
+        <>
+            <div key={item.id} id="cardapioDiv" className="mt-6 mb-6 p-6 bg-white rounded-lg shadow-lg transition hover:shadow-xl transform hover:scale-105 duration-300 space-x-6">
+                <div className="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 className="text-lg font-bold text-gray-800">
+                            {item.refeicao} - {item.titulo}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            {`Média de Avaliações: `}
+                            <span className="text-orange-500 font-bold">{mediaAvaliacoes(item.id)}</span>
+                        </p>
                     </div>
-                </li>                
-                ))}
-            </ul>
 
-        ) : (
-            <p className="ml-4 text-sm text-gray-500 italic">Nenhum item encontrado para este cardápio.</p>
-        )}
-    </div>
-);
+                    <div className="flex space-x-4 ml-auto">
+                        {session && ( // Renderiza o botão apenas se o usuário estiver logado
+                            <button
+                                onClick={() => handleAvaliarClick(item.id)}
+                                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center space-x-2"
+                            >
+                                <span>Avaliar</span>
+                            </button>
+                        )}
+                        <button
+                            onClick={handleShareImage}
+                            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center space-x-2"
+                        >
+                            <FontAwesomeIcon icon={faShareAlt} />
+                            {/* <span>Compartilhar</span> */}
+                        </button>
+                    </div>
+                </div>
+                {itens && itens.length > 0 ? (
+                    <ul className="ml-4 list-disc space-y-4">
+                        {itens.map(subItem => (
+                            <li key={subItem.id} className="flex items-center mb-4 space-x-4 transition duration-300 ease-in-out transform hover:bg-gray-200">
+                                {/* Imagem do item à esquerda */}
+                                <img
+                                    src={"https://i.ibb.co/6Dk28Ky/1d28c51cfab73dfcd0e3fad6824f4e86.jpg"}
+                                    alt={subItem.nome}
+                                    className="object-contain rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
+                                />
+                                {/* Nome e descrição à direita */}
+                                <div className="flex flex-col">
+                                    <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
+                                    <p className="text-sm text-gray-600">{subItem.descricao}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
 
-const Cardapio = () => {
+                ) : (
+                    <p className="ml-4 text-sm text-gray-500 italic">Nenhum item encontrado para este cardápio.</p>
+                )}
+                {/* Botão para exibir as avaliações */}
+                <div className="flex justify-end">
+                    <button
+                        onClick={handleShowReviewsOpen}
+                        className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors duration-300 flex items-center space-x-2"
+                    >
+                        <FontAwesomeIcon icon={faComment} />
+                        <span>Mostrar Avaliações</span>
+                    </button>
+                </div>
+            </div>
+            {showReviews && <CardapioReviews CardapioId={item.id} onClose={handleShowReviewsClose} />}
+        </>
+    )
+};
+
+
+const Cardapio = ({ today, setToday }) => {
     const { data: session } = useSession();
     const [cardapio, setCardapio] = useState([]);
     const [itensPorCardapio, setItensPorCardapio] = useState({});
@@ -65,7 +136,7 @@ const Cardapio = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userId, setUserId] = useState("");
     const [avaliacoes, setAvaliacoes] = useState([]);
-    const [today, setToday] = useState(new Date());
+    //const [today, setToday] = useState(new Date());
 
     const url = "http://localhost:9081/";
 

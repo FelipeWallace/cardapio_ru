@@ -121,7 +121,7 @@ const SidebarMenu = () => {
             </div>
 
             {/* Botão do burger menu - visível em telas pequenas */}
-            <div className="lg:hidden fixed top-4 left-4 z-40">
+            <div className="lg:hidden absolute top-4 left-4 z-40">
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                     className="focus:outline-none"
@@ -140,7 +140,7 @@ const SidebarMenu = () => {
                 <div className="lg:hidden fixed top-0 left-0 h-screen w-64 bg-slate-900 text-white z-40 p-4">
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
-                        className="text-white absolute top-4 right-4 focus:outline-none"
+                        className="text-white absolute top-4 left-4 focus:outline-none"
                     >
                         {/* Ícone para fechar o menu */}
                         <FontAwesomeIcon icon={faTimes} className="w-8 h-8" />

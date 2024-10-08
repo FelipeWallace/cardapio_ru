@@ -137,13 +137,13 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
         {/* Modais para adicionar e remover itens ao cardápio */}
         {isAddModalOpen && (
                 <AddItemModal
-                    cardapioId={item.id} // Passa o ID do cardápio para o modal
+                    cardapioId={item.id}
                     onClose={handleAddModalClose}
                 />
             )}
         {isRmvModalOpen && (
                 <RemoveItemModal
-                    cardapioId={item.id} // Passa o ID do cardápio para o modal
+                    cardapioId={item.id}
                     onClose={handleRmvModalClose}
                 />
             )}

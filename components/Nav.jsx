@@ -29,7 +29,7 @@ const Nav = () => {
           height={30}
           className='object-contain hidden sm:block' // Oculte em telas menores que sm
         />
-        <p className='logo_text hidden sm:block'>Restaurante Universitário</p> {/* Oculte o texto em telas menores que sm */}
+        <p className='logo_text'>Restaurante Universitário</p>
       </Link>
 
       {/* Desktop */}

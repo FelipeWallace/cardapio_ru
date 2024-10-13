@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import AdminGuard from "@components/AdminGuard";
 import Notification from "@components/Notification";
@@ -162,11 +163,10 @@ const Cardapio = () => {
     const [tipo, setTipo] = useState("");
     const [loading, setLoading] = useState(false);
     const [avaliacoes, setAvaliacoes] = useState([]);
-
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-
-    const url = "http://localhost:9081/";
+    const router = useRouter();
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         setLoading(true);
@@ -288,6 +288,7 @@ const Cardapio = () => {
         const novoCardapio = response.data;
         setCardapio([...cardapio, novoCardapio]);
         limparDados();
+        router.reload();
     };
 
     const atualizaListaCardapioEditado = (response) => {
@@ -295,6 +296,7 @@ const Cardapio = () => {
         const cardapiosAtualizados = cardapio.map(item => item.id === cardapioEditado.id ? cardapioEditado : item);
         setCardapio(cardapiosAtualizados);
         limparDados();
+        router.reload();
     };
 
     const calcularMediaAvaliacoes = (cardapioId) => {

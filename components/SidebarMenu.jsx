@@ -21,8 +21,7 @@ const SidebarMenu = () => {
     const [isUserAdmin, setIsUserAdmin] = useState(false);
     const [isOpen, setIsOpen] = useState(false); // Estado para controlar a abertura do menu
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Controle do menu em dispositivos móveis
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const checkIfUserIsAdmin = async () => {

@@ -15,7 +15,7 @@ const Avisos = () => {
   const [tipo, setTipo] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showForm, setShowForm] = useState(false);
-  const url = 'http://localhost:9081/';
+  const url = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     fetchAvisos();

@@ -13,11 +13,9 @@ const Avaliacoes = () => {
     const [comentario, setComentario] = useState("");
     const [usuariosId, setUsuariosId] = useState("");
     const [cardapioId, setCardapioId] = useState("");
-
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         fetch(url + "avaliacoes")

@@ -136,9 +136,7 @@ const Cardapio = ({ today, setToday }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userId, setUserId] = useState("");
     const [avaliacoes, setAvaliacoes] = useState([]);
-    //const [today, setToday] = useState(new Date());
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         setLoading(true);

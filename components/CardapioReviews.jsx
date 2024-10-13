@@ -7,7 +7,7 @@ import StarRating from "@components/StarRating";
 const CardapioReviews = ({ CardapioId, onClose }) => {
     const [avaliacoes, setAvaliacoes] = useState([]);
     const [usuarios, setUsuarios] = useState({});
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const fetchAvaliacoes = async () => {

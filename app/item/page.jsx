@@ -10,8 +10,7 @@ const Item = () => {
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [imagem_url, setImagem_url] = useState("");
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     // Fetch itens
     useEffect(() => {

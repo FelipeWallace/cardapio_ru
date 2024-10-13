@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Notification from './Notification';
 
 const AddItemModal = ({ cardapioId, onClose }) => {
     const [itens, setItens] = useState([]);  // Todos os itens disponíveis
     const [itensNoCardapio, setItensNoCardapio] = useState([]);  // Itens já no cardápio
     const [selectedItems, setSelectedItems] = useState(new Set());  // Itens selecionados
-
-    const url = "http://localhost:9081/";
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     // Busca todos os itens disponíveis
     useEffect(() => {
@@ -58,16 +60,20 @@ const AddItemModal = ({ cardapioId, onClose }) => {
 
         try {
             await Promise.all(promises);
-            alert("Itens adicionados com sucesso!");
+            setSuccessMessage("Itens adicionados com sucesso!");
             setSelectedItems(new Set());
-            onClose();  // Fechar o modal após o envio
+            setTimeout(() => {
+                onClose();
+            }, 3000);
         } catch (error) {
-            console.error("Erro ao adicionar itens ao cardápio:", error);
+            setErrorMessage("Erro ao adicionar itens ao cardápio:", error);
         }
     };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
+            <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
             <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
                 <h2 className="text-xl font-bold mb-4">Adicionar Itens ao Cardápio</h2>
 

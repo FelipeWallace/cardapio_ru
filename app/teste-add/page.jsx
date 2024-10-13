@@ -8,8 +8,7 @@ export default function AdicionarItemAoCardapio() {
     const [itens, setItens] = useState([]);
     const [selectedCardapio, setSelectedCardapio] = useState("");
     const [selectedItems, setSelectedItems] = useState(new Set()); // Usar um Set para armazenar itens selecionados
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         fetch(url + "cardapio")

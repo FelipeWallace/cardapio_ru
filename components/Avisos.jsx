@@ -9,7 +9,7 @@ const Avisos = () => {
     const [avisos, setAvisos] = useState([]);
     const [isExpanded, setIsExpanded] = useState(false); // Controle de exibição dos avisos
     const [hasTodayNotification, setHasTodayNotification] = useState(false); // Controle de notificação
-    const url = 'http://localhost:9081/';
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         fetchAvisos();

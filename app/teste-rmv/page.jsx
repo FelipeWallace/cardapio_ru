@@ -7,8 +7,7 @@ export default function RemoverItemDoCardapio() {
     const [cardapios, setCardapios] = useState([]);
     const [selectedCardapioId, setSelectedCardapioId] = useState("");
     const [itens, setItens] = useState([]);
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         fetch(url + "cardapio")

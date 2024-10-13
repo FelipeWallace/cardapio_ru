@@ -11,8 +11,7 @@ const Usuarios = () => {
     const [email, setEmail] = useState("");
     const [foto, setFoto] = useState("");
     const [perfil, setPerfil] = useState("");
-
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         fetch(url + "usuarios")

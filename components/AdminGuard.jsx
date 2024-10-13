@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const AdminGuard = ({ children }) => {
     const { data: session, status } = useSession();
+    const router = useRouter();
     const [isUserAdmin, setIsUserAdmin] = useState(null);
-    const url = 'http://localhost:9081/';
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         const checkIfUserIsAdmin = async () => {
@@ -27,6 +29,18 @@ const AdminGuard = ({ children }) => {
 
         checkIfUserIsAdmin();
     }, [session]);
+
+    useEffect(() => {
+        if (session && !isUserAdmin) {
+            // Só redireciona se houver sessão e o usuário não for admin
+            const timeout = setTimeout(() => {
+                router.push('/');
+            }, 3000);
+
+            // Limpa o timeout ao desmontar o componente
+            return () => clearTimeout(timeout);
+        }
+    }, [isUserAdmin, session, router]);
 
     // Verifica o status da sessão
     if (status === 'loading') {

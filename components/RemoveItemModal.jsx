@@ -6,7 +6,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const RemoveItemModal = ({ cardapioId, onClose }) => {
     const [itens, setItens] = useState([]);
-    const url = "http://localhost:9081/";
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         if (cardapioId) {

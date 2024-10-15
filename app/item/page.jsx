@@ -1,16 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AdminGuard from "@components/AdminGuard";
+import Notification from "@components/Notification";
 
 const Item = () => {
     const [item, setItem] = useState([]);
-    const [id, setId] = useState(null); // Usado para editar um item
+    const [id, setId] = useState(null);
     const [nome, setNome] = useState("");
     const [descricao, setDescricao] = useState("");
     const [imagem_url, setImagem_url] = useState("");
     const url = process.env.NEXT_PUBLIC_API_URL;
+
+    const [errorMessage, setErrorMessage] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     // Fetch itens
     useEffect(() => {

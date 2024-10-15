@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import AvaliacoesModal from "@components/AvaliacoesModal";
 import CardapioReviews from "./CardapioReviews";
@@ -117,7 +117,7 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
                         className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors duration-300 flex items-center space-x-2"
                     >
                         <FontAwesomeIcon icon={faComment} />
-                        <span>Mostrar Avaliações</span>
+                        <span>Avaliações</span>
                     </button>
                 </div>
             </div>

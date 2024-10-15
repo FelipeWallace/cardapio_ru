@@ -44,10 +44,17 @@ const Avisos = () => {
     });
 
     const checkForTodayNotifications = (avisos) => {
-        const today = new Date().toISOString().split('T')[0]; // Data atual no formato 'YYYY-MM-DD'
-        const hasToday = avisos.some((aviso) => aviso.data.split('T')[0] === today);
+        const today = new Date().toLocaleDateString('pt-BR'); // Data local no formato 'DD/MM/YYYY'
+        
+        const hasToday = avisos.some((aviso) => {
+            // Normaliza a data do aviso para o formato local 'DD/MM/YYYY'
+            const avisoData = new Date(aviso.data).toLocaleDateString('pt-BR');
+            return avisoData === today;
+        });
+        
         setHasTodayNotification(hasToday);
     };
+    
 
     const getBackgroundColor = (tipo) => {
         const tipoAviso = tipo.trim();

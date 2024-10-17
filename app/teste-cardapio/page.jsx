@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import AdminGuard from "@components/AdminGuard";
 import Notification from "@components/Notification";
 import AddItemModal from "@components/AddItemModal";
@@ -60,6 +59,11 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
 const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isRmvModalOpen, setIsRmvModalOpen] = useState(false);
+    // const [isExpanded, setIsExpanded] = useState(false);
+
+    // const toggleExpand = () => {
+    //     setIsExpanded(!isExpanded);
+    // };
 
     const handleAddModalOpen = () => {
         setIsAddModalOpen(true);
@@ -79,76 +83,80 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
 
     return (
         <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
-        <div className="flex items-center justify-between mb-2">
-            <div>
-                {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
-                <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
+            <div className="flex items-center justify-between mb-2">
+                <div>
+                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
+                    <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
+                </div>
+                {/* {itens && itens.length > 0? (
+                    <button 
+                    onClick={toggleExpand} 
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out">
+                    <FontAwesomeIcon icon={faEllipsisV} />
+                    </button>
+                ) : null} */}
             </div>
-        </div>
-        {itens && itens.length > 0 ? (
-            <ul className="ml-4 list-disc space-y-4">
-                {itens.map(subItem => (
-                    <li key={subItem.id} className="flex items-center mb-4 space-x-4">
-                        {/* Imagem do item à esquerda */}
-                        <Image
-                            src="assets/images/logo.svg"
-                            width={40}
-                            height={40}
-                            className="object-contain"
-                            alt={subItem.nome}
-                        />
-
-                        {/* Nome e descrição à direita */}
-                        <div className="flex flex-col">
-                            <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
-                            <p className="text-sm text-gray-600">{subItem.descricao}</p>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-        ) : (
-            <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
-        )}
-        <div className="absolute bottom-4 right-4 flex space-x-4">
-            <button
-                className="text-green-500 hover:text-green-700 transition duration-300 flex items-center"
-                onClick={handleAddModalOpen}
-            >
-                <FontAwesomeIcon icon={faPlus} className="mr-1" />
-            </button>
-            <button
-                className="text-orange-500 hover:text-orange-700 transition duration-300 flex items-center"
-                onClick={handleRmvModalOpen}
-            >
-                <FontAwesomeIcon icon={faMinus} className="mr-1" />
-            </button>
-            <button
-                onClick={() => editarDados(item.id)}
-                className="text-blue-500 hover:text-blue-700 transition duration-300 flex items-center"
-            >
-                <FontAwesomeIcon icon={faEdit} className="mr-1" />
-            </button>
-            <button
-                onClick={() => apagarDados(item.id)}
-                className="text-red-500 hover:text-red-700 transition duration-300 flex items-center"
-            >
-                <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
-            </button>
-        </div>
-        {/* Modais para adicionar e remover itens ao cardápio */}
-        {isAddModalOpen && (
+            {itens && itens.length > 0 ? (
+                <ul className="ml-4 list-disc space-y-4 mt-4">
+                    {itens.map(subItem => (
+                        <li key={subItem.id} className="flex items-center mb-4 space-x-4">
+                            {/* Imagem do item à esquerda */}
+                            <img
+                                src={subItem.imagem_url ? subItem.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
+                                alt={subItem.nome}
+                                className="object-cover rounded w-10 h-10 transition duration-300 ease-in-out transform hover:scale-110"
+                            />
+                            {/* Nome e descrição à direita */}
+                            <div className="flex flex-col">
+                                <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
+                                <p className="text-sm text-gray-600">{subItem.descricao}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
+            )}
+            <div className="absolute bottom-4 right-4 flex space-x-4">
+                <button
+                    className="text-green-500 hover:text-green-700 transition duration-300 flex items-center"
+                    onClick={handleAddModalOpen}
+                >
+                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
+                </button>
+                <button
+                    className="text-orange-500 hover:text-orange-700 transition duration-300 flex items-center"
+                    onClick={handleRmvModalOpen}
+                >
+                    <FontAwesomeIcon icon={faMinus} className="mr-1" />
+                </button>
+                <button
+                    onClick={() => editarDados(item.id)}
+                    className="text-blue-500 hover:text-blue-700 transition duration-300 flex items-center"
+                >
+                    <FontAwesomeIcon icon={faEdit} className="mr-1" />
+                </button>
+                <button
+                    onClick={() => apagarDados(item.id)}
+                    className="text-red-500 hover:text-red-700 transition duration-300 flex items-center"
+                >
+                    <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
+                </button>
+            </div>
+            {/* Modais para adicionar e remover itens ao cardápio */}
+            {isAddModalOpen && (
                 <AddItemModal
                     cardapioId={item.id}
                     onClose={handleAddModalClose}
                 />
             )}
-        {isRmvModalOpen && (
+            {isRmvModalOpen && (
                 <RemoveItemModal
                     cardapioId={item.id}
                     onClose={handleRmvModalClose}
                 />
             )}
-    </div>
+        </div>
     )
 };
 
@@ -203,15 +211,18 @@ const Cardapio = () => {
     };
 
     // Filtrar os cardápios com base na data selecionada
-    const cardapiosFiltrados = cardapio.filter((item) => {
-        if (!dataSelecionada) return true;
+    // Ordena os cardápios por ID de forma decrescente e filtra pela data selecionada
+    const cardapiosFiltrados = cardapio
+        .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
+        .filter((item) => {
+            if (!dataSelecionada) return true;
 
-        // Normaliza a data vinda do backend e a data selecionada
-        const dataItemNormalizada = normalizarData(item.data);
-        const dataSelecionadaNormalizada = normalizarData(dataSelecionada);
+            // Normaliza a data vinda do backend e a data selecionada
+            const dataItemNormalizada = normalizarData(item.data);
+            const dataSelecionadaNormalizada = normalizarData(dataSelecionada);
 
-        return dataItemNormalizada === dataSelecionadaNormalizada;
-    });
+            return dataItemNormalizada === dataSelecionadaNormalizada;
+        });
 
     const novosDados = () => setTipo("novo");
 

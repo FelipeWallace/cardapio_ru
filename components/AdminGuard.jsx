@@ -35,7 +35,7 @@ const AdminGuard = ({ children }) => {
             // Só redireciona se houver sessão e o usuário não for admin
             const timeout = setTimeout(() => {
                 router.push('/');
-            }, 3000);
+            }, 5000);
 
             // Limpa o timeout ao desmontar o componente
             return () => clearTimeout(timeout);

@@ -22,10 +22,10 @@ const Nav = () => {
     <nav className='flex-between w-full mb-16 pt-3'>
       <Link href='/' className='flex gap-2 flex-center'>
         <Image
-          src='/assets/images/logo.svg'
+          src='/assets/images/Restaurant-Logo.jpg'
           alt='logo'
-          width={30}
-          height={30}
+          width={60}
+          height={60}
           className='object-contain hidden sm:block' // Oculte em telas menores que sm
         />
         <p className='logo_text'>Restaurante Universitário</p>

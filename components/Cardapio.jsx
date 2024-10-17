@@ -94,9 +94,9 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
                             <li key={subItem.id} className="flex items-center mb-4 space-x-4 transition duration-300 ease-in-out transform hover:bg-gray-200">
                                 {/* Imagem do item à esquerda */}
                                 <img
-                                    src={"https://i.ibb.co/6Dk28Ky/1d28c51cfab73dfcd0e3fad6824f4e86.jpg"}
+                                    src={subItem.imagem_url ? subItem.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
                                     alt={subItem.nome}
-                                    className="object-contain rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
+                                    className="object-cover rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
                                 />
                                 {/* Nome e descrição à direita */}
                                 <div className="flex flex-col">

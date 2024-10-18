@@ -19,7 +19,7 @@ const CardapioReviews = ({ CardapioId, onClose }) => {
                 const uniqueUserIds = [...new Set(usuarioIds)]; // Remover IDs duplicados
                 const usuarioPromises = uniqueUserIds.map(id => axios.get(`${url}usuarios/${id}`));
                 const usuarioResponses = await Promise.all(usuarioPromises);
-                
+
                 const usuariosData = {};
                 usuarioResponses.forEach(res => {
                     const usuario = res.data;
@@ -49,13 +49,11 @@ const CardapioReviews = ({ CardapioId, onClose }) => {
                         >
                             <div className="flex items-center">
                                 {/* Exibe a foto do usuário */}
-                                {usuarios[avaliacao.usuarios_id]?.foto && (
-                                    <img
-                                        src={usuarios[avaliacao.usuarios_id].foto}
-                                        alt="Foto do Usuário"
-                                        className="w-10 h-10 rounded-full mr-2"
-                                    />
-                                )}
+                                <img
+                                    src={usuarios[avaliacao.usuarios_id]?.foto || "https://i.ibb.co/6HJpnRs/20c00f0f135c950096a54b7b465e45cc.jpg"}
+                                    alt="Foto do Usuário"
+                                    className="w-10 h-10 rounded-full mr-2"
+                                />
                                 <div>
                                     <p className="text-black font-bold text-sm">{`${usuarios[avaliacao.usuarios_id]?.nome || 'Desconhecido'}`}</p>
                                     <StarRating rating={avaliacao.pontuacao} />

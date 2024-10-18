@@ -158,7 +158,7 @@ const Avisos = () => {
                   <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
                   <p className="font-semibold text-gray-600">{aviso.aviso}</p>
                   <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString()}`}</p>
-                  <p className="text-gray-400 text-sm">{`ID do Usuário: ${aviso.usuarios_id}`}</p>
+                  {/* <p className="text-gray-400 text-sm">{`ID do Usuário: ${aviso.usuarios_id}`}</p> */}
                 </div>
                 <div className="absolute bottom-4 right-4 flex space-x-4">
                   <button

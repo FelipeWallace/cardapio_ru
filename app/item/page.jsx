@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import AdminGuard from "@components/AdminGuard";
 import Notification from "@components/Notification";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Item = () => {
     const [item, setItem] = useState([]);
@@ -125,29 +127,35 @@ const Item = () => {
                     {item.map((item) => (
                         <li
                             key={item.id}
-                            className="mb-2 flex justify-between items-center bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out"
+                            className="flex justify-between items-center bg-white p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out"
                         >
-                            <div>
+                            <img
+                                src={item.imagem_url ? item.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
+                                alt={item.nome}
+                                className="object-cover rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
+                            />
+                            <div className="flex-1 mx-4">
                                 <strong className="text-lg font-semibold text-gray-700">{item.id} - {item.nome}</strong>
                                 <p className="text-gray-500">{item.descricao}</p>
                             </div>
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => handleEdit(item)}
-                                    className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-700"
+                                    className="text-yellow-500 hover:text-yellow-700"
                                 >
-                                    Editar
+                                    <FontAwesomeIcon icon={faEdit} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(item.id)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700"
+                                    className="text-red-500 hover:text-red-700"
                                 >
-                                    Excluir
+                                    <FontAwesomeIcon icon={faTrashAlt} />
                                 </button>
                             </div>
                         </li>
                     ))}
                 </ul>
+
                 <button onClick={scrollToTop} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
                     Voltar ao Topo
                 </button>

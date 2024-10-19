@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBell as faBellRegular } from '@fortawesome/free-regular-svg-icons';
 
 const Avisos = () => {
     const [avisos, setAvisos] = useState([]);
@@ -110,7 +111,7 @@ const Avisos = () => {
             {/* Ícone de sino com notificação */}
             <button onClick={toggleAvisos} className="text-black mt-2">
                 <FontAwesomeIcon
-                    icon={faBell}
+                    icon={hasTodayNotification ? faBell : faBellRegular}
                     size="lg"
                     className={hasTodayNotification ? 'animate-pulse' : ''}
                 />

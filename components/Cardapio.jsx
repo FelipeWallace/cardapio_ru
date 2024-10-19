@@ -136,9 +136,9 @@ const Cardapio = ({ today, setToday }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userId, setUserId] = useState("");
     const [avaliacoes, setAvaliacoes] = useState([]);
-    const url = process.env.NEXT_PUBLIC_API_URL;
-
     const [showReturnButton, setShowReturnButton] = useState(false);
+
+    const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
         setLoading(true);

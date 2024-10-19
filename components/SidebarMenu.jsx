@@ -59,7 +59,7 @@ const SidebarMenu = () => {
                 className={`hidden lg:flex h-screen bg-slate-900 text-white flex-col fixed top-0 left-0 transition-all duration-300 ${isOpen ? ' w-64' : ' w-16' // Controlar a largura do menu em telas grandes
                     }`}
             >
-                <h2 className={`text-2xl font-bold p-4 border-b border-orange-600 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 mt-7'}`}>
+                <h2 className={`text-2xl font-bold p-4 border-b border-red-900 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 mt-7'}`}>
                     {isOpen && "Menu"} {/* Mostra o título "Menu" quando o menu está aberto */}
                 </h2>
                 <nav className="flex-1 p-4">

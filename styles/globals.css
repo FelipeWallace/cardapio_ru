@@ -170,6 +170,19 @@
 }
 
 /* Adicionado por mim */
+
+.purple_gradient {
+  @apply bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent;
+}
+
+.red_blue_gradient {
+  @apply bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text text-transparent;
+}
+
+.red_gradient {
+  @apply bg-gradient-to-r from-red-900 to-red-600 bg-clip-text text-transparent;
+}
+
 /* Estilo personalizado para a versão exportada */
 .export-style {
   background-color: white;  /* Cor de fundo customizada */

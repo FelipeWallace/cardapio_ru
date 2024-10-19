@@ -56,6 +56,8 @@ const Avisos = () => {
     setTipo(aviso.tipo);
     setData(aviso.data);
     setShowForm(true);
+
+    scrollToTop();
   };
 
   const handleDelete = async (id) => {
@@ -83,6 +85,13 @@ const Avisos = () => {
       default:
         return "bg-gray-200";
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Adiciona uma animação suave ao rolar
+    });
   };
 
   return (
@@ -142,6 +151,12 @@ const Avisos = () => {
             >
               {editingId ? 'Atualizar' : 'Criar'}
             </button>
+            <button
+              onClick={() => setShowForm(false)}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 ml-2"
+            >
+              Cancelar
+            </button>
           </form>
         )}
 
@@ -177,6 +192,10 @@ const Avisos = () => {
               </li>
             ))}
         </ul>
+
+        <button onClick={scrollToTop} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Voltar ao Topo
+        </button>
       </div>
     </AdminGuard>
   );

@@ -7,7 +7,7 @@ import CardapioReviews from "./CardapioReviews";
 import { useSession } from "next-auth/react";
 import { addDays, subDays } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight, faShareAlt, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faChevronLeft, faChevronRight, faShareAlt, faComment, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 import html2canvas from "html2canvas";
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
@@ -138,6 +138,8 @@ const Cardapio = ({ today, setToday }) => {
     const [avaliacoes, setAvaliacoes] = useState([]);
     const url = process.env.NEXT_PUBLIC_API_URL;
 
+    const [showReturnButton, setShowReturnButton] = useState(false);
+
     useEffect(() => {
         setLoading(true);
         fetch(url + "cardapio")
@@ -174,11 +176,18 @@ const Cardapio = ({ today, setToday }) => {
     // Função para avançar um dia
     const handleNextDay = () => {
         setToday((prevDate) => addDays(prevDate, 1)); // Adiciona 1 dia à data atual
+        setShowReturnButton(true);
     };
 
     // Função para retroceder um dia
     const handlePreviousDay = () => {
         setToday((prevDate) => subDays(prevDate, 1)); // Subtrai 1 dia da data atual
+        setShowReturnButton(true);
+    };
+
+    const handleReturnToToday = () => {
+        setToday(new Date());
+        setShowReturnButton(false);
     };
 
     // Filtrar os cardápios com base na data selecionada
@@ -217,13 +226,22 @@ const Cardapio = ({ today, setToday }) => {
                     className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
                 >
                     <FontAwesomeIcon icon={faChevronLeft} className="mr-2" />
-                    Dia Anterior
+                    <span className="hidden sm:block">Dia Anterior</span>
                 </button>
+                {showReturnButton && (
+                    <button
+                        onClick={handleReturnToToday}
+                        className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
+                    >
+                        <FontAwesomeIcon icon={faRotateRight} className="mr-2" />
+                        <span className="hidden sm:block">Hoje</span>
+                    </button>
+                )}
                 <button
                     onClick={handleNextDay}
                     className="flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
                 >
-                    Próximo Dia
+                    <span className="hidden sm:block">Próximo Dia</span>
                     <FontAwesomeIcon icon={faChevronRight} className="ml-2" />
                 </button>
             </div>

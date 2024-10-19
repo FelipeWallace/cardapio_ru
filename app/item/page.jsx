@@ -141,7 +141,7 @@ const Item = () => {
                             <div className="flex space-x-2">
                                 <button
                                     onClick={() => handleEdit(item)}
-                                    className="text-yellow-500 hover:text-yellow-700"
+                                    className="text-blue-500 hover:text-blue-700"
                                 >
                                     <FontAwesomeIcon icon={faEdit} />
                                 </button>

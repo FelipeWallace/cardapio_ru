@@ -85,7 +85,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
         <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR')}</strong> - {item.refeicao} - {item.titulo}
+                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</strong> - {item.refeicao} - {item.titulo}
                     <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
                 </div>
                 {/* {itens && itens.length > 0? (

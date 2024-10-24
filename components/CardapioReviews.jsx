@@ -58,7 +58,7 @@ const CardapioReviews = ({ CardapioId, onClose }) => {
                                     <p className="text-black font-bold text-sm">{`${usuarios[avaliacao.usuarios_id]?.nome || 'Desconhecido'}`}</p>
                                     <StarRating rating={avaliacao.pontuacao} />
                                     <p className="text-gray-700 font-semibold">{avaliacao.comentario}</p>
-                                    <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString()}`}</p>
+                                    <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}</p>
                                 </div>
                             </div>
                         </li>

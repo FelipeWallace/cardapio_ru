@@ -168,7 +168,7 @@ const Avaliacoes = () => {
                                     {`Pontuação: ${avaliacao.pontuacao} estrelas`}
                                 </strong>
                                 <p className="text-gray-500">{avaliacao.comentario}</p>
-                                <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString()}`}</p>
+                                <p className="text-gray-400 text-sm">{`Data: ${new Date(avaliacao.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`}</p>
                                 <p className="text-gray-400 text-sm">{`ID do Usuário: ${avaliacao.usuarios_id}`}</p>
                                 <p className="text-gray-400 text-sm">{`ID do Cardápio: ${avaliacao.cardapio_id}`}</p>
                             </div>

@@ -47,10 +47,10 @@ const Avisos = () => {
     });
 
     const checkForTodayNotifications = (avisos) => {
-        const today = new Date().toLocaleDateString('pt-BR');
+        const today = new Date().toLocaleDateString('pt-BR', { timeZone: 'UTC'});
 
         const todayAvisos = avisos.filter((aviso) => {
-            const avisoData = new Date(aviso.data).toLocaleDateString('pt-BR');
+            const avisoData = new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC'});
             return avisoData === today;
         });
 
@@ -139,7 +139,7 @@ const Avisos = () => {
                                         <div>
                                             <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
                                             <p className="font-semibold text-gray-600">{aviso.aviso}</p>
-                                            <p className="text-gray-400 text-sm">{`Publicado em: ${new Date(aviso.data).toLocaleDateString()}`}</p>
+                                            <p className="text-gray-400 text-sm">{`Publicado em: ${new Date(aviso.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`}</p>
                                         </div>
                                     </li>
                                 ))
@@ -161,7 +161,7 @@ const Avisos = () => {
                             </button>
                         </div>
                         <p className="text-gray-700 mb-2">{urgentAviso.aviso}</p>
-                        <p className="text-gray-500 text-sm">{`Publicado em: ${new Date(urgentAviso.data).toLocaleDateString()}`}</p>
+                        <p className="text-gray-500 text-sm">{`Publicado em: ${new Date(urgentAviso.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}`}</p>
                         <button onClick={closePopup} className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700">
                             Fechar
                         </button>

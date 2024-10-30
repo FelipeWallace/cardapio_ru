@@ -66,7 +66,7 @@ const SidebarMenu = () => {
                     <ul className="space-y-4">
                         {/* Lista de links */}
                         <li>
-                            <Link href="/teste-cardapio" className="hover:bg-gray-700 p-2 rounded block transition-colors">
+                            <Link href="/cardapio" className="hover:bg-gray-700 p-2 rounded block transition-colors">
                                 {isOpen ? "Cardápio" : <FontAwesomeIcon icon={faUtensils} className="text-white" />}
                             </Link>
                         </li>
@@ -77,7 +77,7 @@ const SidebarMenu = () => {
                         </li>
                         <li>
                             <Link
-                                href="/teste-add"
+                                href="/add"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
                                 {isOpen ? "Adicionar Itens" : <FontAwesomeIcon icon={faPlus} className="text-white" />}
@@ -85,7 +85,7 @@ const SidebarMenu = () => {
                         </li>
                         <li>
                             <Link
-                                href="/teste-rmv"
+                                href="/rmv"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
                                 {isOpen ? "Remover Itens" : <FontAwesomeIcon icon={faMinus} className="text-white" />}
@@ -93,7 +93,7 @@ const SidebarMenu = () => {
                         </li>
                         <li>
                             <Link
-                                href="/teste-usuarios"
+                                href="/usuarios"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
                                 {isOpen ? "Usuários" : <FontAwesomeIcon icon={faUsers} className="text-white" />}
@@ -101,7 +101,7 @@ const SidebarMenu = () => {
                         </li>
                         <li>
                             <Link
-                                href="/teste-avaliacoes"
+                                href="/avaliacoes"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
                                 {isOpen ? "Avaliações" : <FontAwesomeIcon icon={faStar} className="text-white" />}
@@ -109,7 +109,7 @@ const SidebarMenu = () => {
                         </li>
                         <li>
                             <Link
-                                href="/teste-avisos"
+                                href="/avisos"
                                 className="hover:bg-gray-700 p-2 rounded block transition-colors"
                             >
                                 {isOpen ? "Avisos" : <FontAwesomeIcon icon={faExclamationTriangle} className="text-white" />}
@@ -147,7 +147,7 @@ const SidebarMenu = () => {
                     <nav className="flex-1 mt-10">
                         <ul className="space-y-4">
                             <li>
-                                <Link href="/teste-cardapio" className="hover:bg-gray-700 p-2 rounded block transition-colors">
+                                <Link href="/cardapio" className="hover:bg-gray-700 p-2 rounded block transition-colors">
                                     Cardápio
                                 </Link>
                             </li>
@@ -158,7 +158,7 @@ const SidebarMenu = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/teste-add"
+                                    href="/add"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
                                     Adicionar Itens
@@ -166,7 +166,7 @@ const SidebarMenu = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/teste-rmv"
+                                    href="/rmv"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
                                     Remover Itens
@@ -174,7 +174,7 @@ const SidebarMenu = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/teste-usuarios"
+                                    href="/usuarios"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
                                     Usuários
@@ -182,7 +182,7 @@ const SidebarMenu = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/teste-avaliacoes"
+                                    href="/avaliacoes"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
                                     Avaliações
@@ -190,7 +190,7 @@ const SidebarMenu = () => {
                             </li>
                             <li>
                                 <Link
-                                    href="/teste-avisos"
+                                    href="/avisos"
                                     className="hover:bg-gray-700 p-2 rounded block transition-colors"
                                 >
                                     Avisos

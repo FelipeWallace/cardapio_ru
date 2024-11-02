@@ -5,6 +5,8 @@ import axios from "axios";
 import StarRating from "@components/StarRating";
 // import Notification from "@components/Notification";
 import AdminGuard from "@components/AdminGuard";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt } from "@node_modules/@fortawesome/free-solid-svg-icons";
 
 const UserDetails = ({ userId }) => {
     const [user, setUser] = useState(null);
@@ -20,9 +22,9 @@ const UserDetails = ({ userId }) => {
 
     return (
         <div className="flex items-center space-x-2">
-            <img 
-                src={user.foto || "https://i.ibb.co/6HJpnRs/20c00f0f135c950096a54b7b465e45cc.jpg"} 
-                alt="Foto do usuário" 
+            <img
+                src={user.foto || "https://i.ibb.co/6HJpnRs/20c00f0f135c950096a54b7b465e45cc.jpg"}
+                alt="Foto do usuário"
                 className="w-8 h-8 rounded-full" />
             <p className="text-gray-500 font-bold text-sm">{user.nome}</p>
         </div>
@@ -54,6 +56,8 @@ const Avaliacoes = () => {
     // const [cardapioId, setCardapioId] = useState("");
     // const [errorMessage, setErrorMessage] = useState("");
     // const [successMessage, setSuccessMessage] = useState("");
+    const [filtroDataInicio, setFiltroDataInicio] = useState('');
+    const [filtroDataFim, setFiltroDataFim] = useState('');
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
@@ -147,9 +151,16 @@ const Avaliacoes = () => {
     // };
 
     // Ordena as avaliações pela data em ordem decrescente
-    const sortedAvaliacoes = avaliacoes.sort((a, b) => new Date(b.data) - new Date(a.data));
+    
+    const sortedAvaliacoes = avaliacoes
+        .filter((avaliacao) => {
+            return (
+                (!filtroDataInicio || new Date(avaliacao.data) >= new Date(filtroDataInicio)) &&
+                (!filtroDataFim || new Date(avaliacao.data) <= new Date(filtroDataFim))
+            );
+        })
+        .sort((a, b) => new Date(b.data) - new Date(a.data));
 
-    // Calcula a média das avaliações
     const calcularMediaAvaliacoes = () => {
         if (sortedAvaliacoes.length === 0) return 0;
         const totalPontuacao = sortedAvaliacoes.reduce((acc, avaliacao) => acc + avaliacao.pontuacao, 0);
@@ -158,7 +169,7 @@ const Avaliacoes = () => {
 
     return (
         <AdminGuard>
-            <div className="p-4 max-w-lg mx-auto bg-gray-100 rounded-lg shadow-md">
+            <div className="p-4 max-w-4xl mx-auto bg-gray-100 rounded-lg shadow-md">
 
                 {/* <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
                 <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} /> */}
@@ -196,6 +207,28 @@ const Avaliacoes = () => {
                         {id ? "Atualizar Avaliação" : "Adicionar Avaliação"}
                     </button>
                 </div> */}
+                <div className="mb-4 flex space-x-4 items-center">
+                    <div className="relative">
+                        <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+                        <input
+                            type="date"
+                            value={filtroDataInicio}
+                            onChange={(e) => setFiltroDataInicio(e.target.value)}
+                            className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                            placeholder="Data Início"
+                        />
+                    </div>
+                    <div className="relative">
+                        <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+                        <input
+                            type="date"
+                            value={filtroDataFim}
+                            onChange={(e) => setFiltroDataFim(e.target.value)}
+                            className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                            placeholder="Data Fim"
+                        />
+                    </div>
+                </div>
                 <ul className="list-none space-y-4">
                     {sortedAvaliacoes.map((avaliacao) => (
                         <li

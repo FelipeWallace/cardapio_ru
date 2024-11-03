@@ -238,7 +238,7 @@ const Avaliacoes = () => {
                             <div>
                                 <UserDetails userId={avaliacao.usuarios_id} />
                                 <StarRating rating={avaliacao.pontuacao} />
-                                <p className="text-gray-500">{avaliacao.comentario}</p>
+                                {avaliacao.comentario && <p className="text-gray-500">"{avaliacao.comentario}"</p>}
                                 <CardapioDetails cardapioId={avaliacao.cardapio_id} />
                                 <p className="text-gray-400 text-sm">{`Data da avaliação: ${new Date(avaliacao.data).toLocaleDateString("pt-BR", { timeZone: "UTC" })}`}</p>
                             </div>

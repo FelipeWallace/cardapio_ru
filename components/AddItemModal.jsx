@@ -7,6 +7,7 @@ const AddItemModal = ({ cardapioId, onClose }) => {
     const [itens, setItens] = useState([]);  // Todos os itens disponíveis
     const [itensNoCardapio, setItensNoCardapio] = useState([]);  // Itens já no cardápio
     const [selectedItems, setSelectedItems] = useState(new Set());  // Itens selecionados
+    const [filtroNome, setFiltroNome] = useState('');
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const url = process.env.NEXT_PUBLIC_API_URL;
@@ -30,8 +31,16 @@ const AddItemModal = ({ cardapioId, onClose }) => {
     }, [cardapioId]);
 
     // Filtro para excluir itens já presentes no cardápio
-    const itensFiltrados = itens.filter(item =>
+    // const itensFiltrados = itens.filter(item =>
+    //     !itensNoCardapio.some(cardapioItem => cardapioItem.id === item.id)
+    // );
+
+    const itensFiltrados = itens
+    .filter(item =>
         !itensNoCardapio.some(cardapioItem => cardapioItem.id === item.id)
+    )
+    .filter(item => 
+        filtroNome ? item.nome.toLowerCase().includes(filtroNome.toLowerCase()) : true
     );
 
     // Controle de seleção de itens
@@ -76,6 +85,16 @@ const AddItemModal = ({ cardapioId, onClose }) => {
             <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
             <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
                 <h2 className="text-xl font-bold mb-4">Adicionar Itens ao Cardápio</h2>
+
+                <div className="mb-4">
+                    <input
+                        placeholder="Filtrar por nome do item"
+                        type="text"
+                        value={filtroNome}
+                        onChange={(e) => setFiltroNome(e.target.value)}
+                        className="mt-1 p-2 border border-gray-300 rounded w-full"
+                    />
+                </div>
 
                 {itensFiltrados.length > 0 ? (
                     <form onSubmit={handleSubmit}>

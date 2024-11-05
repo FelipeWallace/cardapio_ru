@@ -12,47 +12,50 @@ import { faEdit, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
-    <>
-        <input
-            type="date"
-            name="txtData"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
-        />
-        <input
-            type="text"
-            name="txtRefeicao"
-            placeholder="Refeição"
-            value={refeicao}
-            onChange={(e) => setRefeicao(e.target.value)}
-            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
-        />
-        <input
-            type="text"
-            name="txtTitulo"
-            placeholder="Título"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            className="block w-full max-w-xs p-2 mt-2 border border-gray-300 rounded"
-        />
-        <div className="mt-4">
-            <button
-                type="button"
-                onClick={limparDados}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2"
-            >
-                Cancelar
-            </button>
-            <button
-                type="button"
-                onClick={gravaDados}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-            >
-                {tipo === "novo" ? "Criar" : "Atualizar"}
-            </button>
+    <div className="flex justify-center">
+        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+            <input
+                type="date"
+                name="txtData"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                className="block w-full p-3 mt-2 border border-gray-300 rounded text-gray-700"
+            />
+            <input
+                type="text"
+                name="txtRefeicao"
+                placeholder="Refeição"
+                value={refeicao}
+                onChange={(e) => setRefeicao(e.target.value)}
+                className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+            />
+            <input
+                type="text"
+                name="txtTitulo"
+                placeholder="Título"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+            />
+            <div className="mt-6 flex justify-end">
+                <button
+                    type="button"
+                    onClick={limparDados}
+                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2"
+                >
+                    Cancelar
+                </button>
+                <button
+                    type="button"
+                    onClick={gravaDados}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                    {tipo === "novo" ? "Criar" : "Atualizar"}
+                </button>
+            </div>
         </div>
-    </>
+    </div>
+
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
@@ -85,7 +88,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
         <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR', {timeZone: 'UTC'})}</strong> - {item.refeicao} - {item.titulo}
+                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</strong> - {item.refeicao} - {item.titulo}
                     <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
                 </div>
                 {/* {itens && itens.length > 0? (
@@ -278,7 +281,6 @@ const Cardapio = () => {
         }
     };
 
-
     const gravaDados = () => {
         if (data && refeicao && titulo) {
             if (tipo === "novo") {
@@ -320,12 +322,8 @@ const Cardapio = () => {
     return (
         <AdminGuard>
             <div className="container mx-auto p-4">
-                {errorMessage &&
-                    <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
-                }
-                {successMessage &&
-                    <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
-                }
+                <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
+                <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
                 <button
                     type="button"
                     onClick={novosDados}

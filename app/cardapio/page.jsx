@@ -88,7 +88,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
         <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
             <div className="flex items-center justify-between mb-2">
                 <div>
-                    {item.id} - <strong>{new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</strong> - {item.refeicao} - {item.titulo}
+                    <strong>{new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</strong> - {item.refeicao} - {item.titulo}
                     <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
                 </div>
                 {/* {itens && itens.length > 0? (
@@ -176,6 +176,7 @@ const Cardapio = () => {
     const [avaliacoes, setAvaliacoes] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
+    const [busca, setBusca] = useState("");
     const router = useRouter();
     const url = process.env.NEXT_PUBLIC_API_URL;
 
@@ -216,16 +217,17 @@ const Cardapio = () => {
     // Filtrar os cardápios com base na data selecionada
     // Ordena os cardápios por ID de forma decrescente e filtra pela data selecionada
     const cardapiosFiltrados = cardapio
-        .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
-        .filter((item) => {
-            if (!dataSelecionada) return true;
+    .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
+    .filter((item) => {
+        // Normaliza a data e verifica a busca por refeição/título em um único filtro
+        const dataItemNormalizada = normalizarData(item.data);
+        const dataSelecionadaNormalizada = dataSelecionada ? normalizarData(dataSelecionada) : null;
 
-            // Normaliza a data vinda do backend e a data selecionada
-            const dataItemNormalizada = normalizarData(item.data);
-            const dataSelecionadaNormalizada = normalizarData(dataSelecionada);
+        const dataMatches = !dataSelecionada || dataItemNormalizada === dataSelecionadaNormalizada;
+        const buscaMatches = item.refeicao.toLowerCase().includes(busca.toLowerCase()) || item.titulo.toLowerCase().includes(busca.toLowerCase());
 
-            return dataItemNormalizada === dataSelecionadaNormalizada;
-        });
+        return dataMatches && buscaMatches;
+    });
 
     const novosDados = () => setTipo("novo");
 
@@ -346,16 +348,26 @@ const Cardapio = () => {
                 )}
                 <div className="mb-4">
                     <label htmlFor="datePicker" className="block text-lg font-medium text-gray-700 mb-2">
-                        Filtre por uma data:
+                        Filtre por data ou nome:
                     </label>
-                    <input
-                        id="datePicker"
-                        type="date"
-                        value={dataSelecionada}
-                        onChange={(e) => setDataSelecionada(e.target.value)}
-                        className="border border-gray-300 rounded px-3 py-2"
-                    />
+                    <div className="flex flex-col md:flex-row items-center md:space-x-4 space-y-3 md:space-y-0">
+                        <input
+                            id="datePicker"
+                            type="date"
+                            value={dataSelecionada}
+                            onChange={(e) => setDataSelecionada(e.target.value)}
+                            className="w-full md:w-auto border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                        />
+                        <input
+                            type="text"
+                            value={busca}
+                            onChange={(e) => setBusca(e.target.value)}
+                            className="w-full md:w-auto border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                            placeholder="Pesquise pelo cardápio..."
+                        />
+                    </div>
                 </div>
+
                 {loading ? (
                     <p>Carregando cardápios...</p>
                 ) : (

@@ -7,6 +7,7 @@ export default function RemoverItemDoCardapio() {
     const [cardapios, setCardapios] = useState([]);
     const [selectedCardapioId, setSelectedCardapioId] = useState("");
     const [itens, setItens] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
@@ -25,6 +26,15 @@ export default function RemoverItemDoCardapio() {
         }
     }, [selectedCardapioId]);
 
+    const filteredCardapios = cardapios.filter((cardapio) => {
+        const dataFormatada = new Date(cardapio.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        return (
+            dataFormatada.includes(searchTerm) ||
+            cardapio.refeicao.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            cardapio.titulo.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    });
+
     const handleRemoveItem = (itemId) => {
         fetch(url + `cardapio/${selectedCardapioId}/remover-item/${itemId}`, {
             method: "DELETE",
@@ -39,17 +49,26 @@ export default function RemoverItemDoCardapio() {
 
     return (
         <AdminGuard>
-            <div>
+            <div className="container mx-auto p-4">
                 <h2 className="text-xl font-bold mb-4">Selecionar Cardápio</h2>
+
+                <input
+                    type="text"
+                    placeholder="Busque por data, título ou refeição"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="mb-2 p-2 border border-gray-300 rounded w-full"
+                />
+
                 <select
                     value={selectedCardapioId}
                     onChange={(e) => setSelectedCardapioId(e.target.value)}
-                    className="mb-4 p-2 border border-gray-300 rounded"
+                    className="mb-4 p-2 border border-gray-300 rounded w-full"
                 >
                     <option value="">Selecione um cardápio</option>
-                    {cardapios.map((cardapio) => (
+                    {filteredCardapios.map((cardapio) => (
                         <option key={cardapio.id} value={cardapio.id}>
-                            {new Date(cardapio.data).toLocaleDateString('pt-BR')} - {cardapio.refeicao} - {cardapio.titulo}
+                            {new Date(cardapio.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })} - {cardapio.refeicao} - {cardapio.titulo}
                         </option>
                     ))}
                 </select>

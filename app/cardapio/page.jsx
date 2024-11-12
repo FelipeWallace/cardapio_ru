@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import AdminGuard from "@components/AdminGuard";
 import Notification from "@components/Notification";
 import AddItemModal from "@components/AddItemModal";
@@ -20,6 +19,7 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
                 value={data}
                 onChange={(e) => setData(e.target.value)}
                 className="block w-full p-3 mt-2 border border-gray-300 rounded text-gray-700"
+                required
             />
             <input
                 type="text"
@@ -28,6 +28,7 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
                 value={refeicao}
                 onChange={(e) => setRefeicao(e.target.value)}
                 className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+                required
             />
             <input
                 type="text"
@@ -36,6 +37,7 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
                 value={titulo}
                 onChange={(e) => setTitulo(e.target.value)}
                 className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+                required
             />
             <div className="mt-6 flex justify-end">
                 <button
@@ -188,7 +190,6 @@ const Cardapio = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [busca, setBusca] = useState("");
-    const router = useRouter();
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
@@ -223,9 +224,9 @@ const Cardapio = () => {
     // Função para normalizar a data e garantir o formato YYYY-MM-DD
     const normalizarData = (data) => {
         return new Date(data).toISOString().split('T')[0];
+        //return new Date(data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
     };
 
-    // Filtrar os cardápios com base na data selecionada
     // Ordena os cardápios por ID de forma decrescente e filtra pela data selecionada
     const cardapiosFiltrados = cardapio
         .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
@@ -294,6 +295,29 @@ const Cardapio = () => {
         }
     };
 
+    // const apagarDados = async (cardapioId) => {
+    //     setErrorMessage("");
+    //     setSuccessMessage("");
+    
+    //     try {
+    //         const urlAvaliado = `${url}cardapio/${cardapioId}/avaliado`;
+    //         const response = await axios.get(urlAvaliado);
+    
+    //         if (response.data.foiAvaliado) {
+    //             setErrorMessage("Não é possível excluir este cardápio, pois ele já foi avaliado.");
+    //             return;
+    //         }
+    
+    //         await axios.delete(`${url}cardapio/${cardapioId}/itens`);
+    //         await axios.delete(`${url}cardapio/${cardapioId}`);
+    
+    //         setCardapio(prevCardapios => prevCardapios.filter(item => item.id !== cardapioId));
+    //         setSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
+    //     } catch (error) {
+    //         setErrorMessage("Erro ao remover o cardápio e seus itens.");
+    //     }
+    // };
+
     const gravaDados = () => {
         if (data && refeicao && titulo) {
             if (tipo === "novo") {
@@ -309,6 +333,28 @@ const Cardapio = () => {
             console.log("Preencha os campos");
         }
     };
+
+    // const gravaDados = async () => {
+    //     if (data && refeicao && titulo) {
+    //         try {
+    //             let response;
+    //             if (tipo === "novo") {
+    //                 response = await axios.post(`${url}cardapio`, { data, refeicao, titulo });
+    //                 setCardapio(prevCardapios => [...prevCardapios, response.data]);
+    //                 setSuccessMessage("Cardápio criado com sucesso!");
+    //             } else if (tipo === "editar") {
+    //                 response = await axios.put(`${url}cardapio/${id}`, { id, data, refeicao, titulo });
+    //                 setCardapio(prevCardapios => prevCardapios.map(item => item.id === id ? response.data : item));
+    //                 setSuccessMessage("Cardápio atualizado com sucesso!");
+    //             }
+    //             limparDados();
+    //         } catch (err) {
+    //             setErrorMessage("Erro ao salvar cardápio.");
+    //         }
+    //     } else {
+    //         setErrorMessage("Preencha todos os campos.");
+    //     }
+    // };
 
     const atualizaListaComNovoCardapio = (response) => {
         const novoCardapio = response.data;

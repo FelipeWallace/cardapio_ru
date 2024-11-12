@@ -8,12 +8,12 @@ import AddItemModal from "@components/AddItemModal";
 import RemoveItemModal from "@components/RemoveItemModal";
 import axios from "axios";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faPlus, faMinus, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 // Componente de Formulário para criar/editar cardápios
 const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
-    <div className="flex justify-center">
-        <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+    <div className="mb-6 p-4 bg-white rounded shadow-md relative">
+        <div className="flex flex-col">
             <input
                 type="date"
                 name="txtData"
@@ -55,18 +55,17 @@ const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setT
             </div>
         </div>
     </div>
-
 );
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
 const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isRmvModalOpen, setIsRmvModalOpen] = useState(false);
-    // const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
 
-    // const toggleExpand = () => {
-    //     setIsExpanded(!isExpanded);
-    // };
+    const toggleExpand = () => {
+        setIsExpanded(!isExpanded);
+    };
 
     const handleAddModalOpen = () => {
         setIsAddModalOpen(true);
@@ -86,66 +85,78 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
 
     return (
         <div key={item.id} className="mb-6 p-4 bg-white rounded shadow-md relative">
-            <div className="flex items-center justify-between mb-2">
-                <div>
+            <div className="flex flex-col">
+                {/* Data, refeição, título e média de avaliações */}
+                <div className="mb-4">
                     <strong>{new Date(item.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</strong> - {item.refeicao} - {item.titulo}
-                    <p>{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
+                    <p className="text-gray-500">{`Média de Avaliações: ${mediaAvaliacoes(item.id)}`}</p>
                 </div>
-                {/* {itens && itens.length > 0? (
-                    <button 
-                    onClick={toggleExpand} 
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 transition duration-300 ease-in-out">
-                    <FontAwesomeIcon icon={faEllipsisV} />
-                    </button>
-                ) : null} */}
+
+                {/* Itens expandíveis */}
+                {isExpanded && (
+                    <ul className="ml-4 list-disc space-y-4 mt-4">
+                        {itens.map(subItem => (
+                            <li key={subItem.id} className="flex items-center mb-4 space-x-4">
+                                {/* Imagem do item à esquerda */}
+                                <img
+                                    src={subItem.imagem_url ? subItem.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
+                                    alt={subItem.nome}
+                                    className="object-cover rounded w-10 h-10 transition duration-300 ease-in-out transform hover:scale-110"
+                                />
+                                {/* Nome e descrição à direita */}
+                                <div className="flex flex-col">
+                                    <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
+                                    <p className="text-sm text-gray-600">{subItem.descricao}</p>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+
+                <div className="flex flex-col items-start space-y-2 mt-4">
+                    {/* Botão Exibir/Recolher */}
+                    {itens && itens.length > 0 ? (
+                        <button
+                            onClick={toggleExpand}
+                            className="text-gray-500 text-sm border border-gray-300 rounded px-3 py-2 flex items-center space-x-2 hover:text-blue-500 hover:border-blue-500 transition duration-300"
+                        >
+                            <FontAwesomeIcon icon={isExpanded ? faChevronUp : faChevronDown} className="mr-1" />
+                            <span>{isExpanded ? 'Recolher Itens' : 'Exibir Itens'}</span>
+                        </button>
+                    ) : (
+                        <p className="text-gray-500 text-sm">Nenhum item cadastrado.</p>
+                    )}
+
+                    {/* Botões de Ação */}
+                    <div className="absolute right-0 bottom-0 flex space-x-4 mt-4 p-2">
+                        <button
+                            className="bg-green-100 text-green-500 hover:text-green-700 hover:bg-green-200 transition duration-300 flex items-center p-2 rounded"
+                            onClick={handleAddModalOpen}
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                        <button
+                            className="bg-orange-100 text-orange-500 hover:text-orange-700 hover:bg-orange-200 transition duration-300 flex items-center p-2 rounded"
+                            onClick={handleRmvModalOpen}
+                        >
+                            <FontAwesomeIcon icon={faMinus} />
+                        </button>
+                        <button
+                            onClick={() => editarDados(item.id)}
+                            className="bg-blue-100 text-blue-500 hover:text-blue-700 hover:bg-blue-200 transition duration-300 flex items-center p-2 rounded"
+                        >
+                            <FontAwesomeIcon icon={faEdit} />
+                        </button>
+                        <button
+                            onClick={() => apagarDados(item.id)}
+                            className="bg-red-100 text-red-500 hover:text-red-700 hover:bg-red-200 transition duration-300 flex items-center p-2 rounded"
+                        >
+                            <FontAwesomeIcon icon={faTrashAlt} />
+                        </button>
+                    </div>
+                </div>
             </div>
-            {itens && itens.length > 0 ? (
-                <ul className="ml-4 list-disc space-y-4 mt-4">
-                    {itens.map(subItem => (
-                        <li key={subItem.id} className="flex items-center mb-4 space-x-4">
-                            {/* Imagem do item à esquerda */}
-                            <img
-                                src={subItem.imagem_url ? subItem.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
-                                alt={subItem.nome}
-                                className="object-cover rounded w-10 h-10 transition duration-300 ease-in-out transform hover:scale-110"
-                            />
-                            {/* Nome e descrição à direita */}
-                            <div className="flex flex-col">
-                                <strong className="text-md font-semibold text-gray-800">{subItem.nome}</strong>
-                                <p className="text-sm text-gray-600">{subItem.descricao}</p>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p className="ml-4 text-gray-500">Nenhum item encontrado para este cardápio.</p>
-            )}
-            <div className="absolute bottom-4 right-4 flex space-x-4">
-                <button
-                    className="text-green-500 hover:text-green-700 transition duration-300 flex items-center"
-                    onClick={handleAddModalOpen}
-                >
-                    <FontAwesomeIcon icon={faPlus} className="mr-1" />
-                </button>
-                <button
-                    className="text-orange-500 hover:text-orange-700 transition duration-300 flex items-center"
-                    onClick={handleRmvModalOpen}
-                >
-                    <FontAwesomeIcon icon={faMinus} className="mr-1" />
-                </button>
-                <button
-                    onClick={() => editarDados(item.id)}
-                    className="text-blue-500 hover:text-blue-700 transition duration-300 flex items-center"
-                >
-                    <FontAwesomeIcon icon={faEdit} className="mr-1" />
-                </button>
-                <button
-                    onClick={() => apagarDados(item.id)}
-                    className="text-red-500 hover:text-red-700 transition duration-300 flex items-center"
-                >
-                    <FontAwesomeIcon icon={faTrashAlt} className="mr-1" />
-                </button>
-            </div>
+
             {/* Modais para adicionar e remover itens ao cardápio */}
             {isAddModalOpen && (
                 <AddItemModal
@@ -160,7 +171,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
                 />
             )}
         </div>
-    )
+    );
 };
 
 const Cardapio = () => {
@@ -217,17 +228,17 @@ const Cardapio = () => {
     // Filtrar os cardápios com base na data selecionada
     // Ordena os cardápios por ID de forma decrescente e filtra pela data selecionada
     const cardapiosFiltrados = cardapio
-    .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
-    .filter((item) => {
-        // Normaliza a data e verifica a busca por refeição/título em um único filtro
-        const dataItemNormalizada = normalizarData(item.data);
-        const dataSelecionadaNormalizada = dataSelecionada ? normalizarData(dataSelecionada) : null;
+        .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
+        .filter((item) => {
+            // Normaliza a data e verifica a busca por refeição/título em um único filtro
+            const dataItemNormalizada = normalizarData(item.data);
+            const dataSelecionadaNormalizada = dataSelecionada ? normalizarData(dataSelecionada) : null;
 
-        const dataMatches = !dataSelecionada || dataItemNormalizada === dataSelecionadaNormalizada;
-        const buscaMatches = item.refeicao.toLowerCase().includes(busca.toLowerCase()) || item.titulo.toLowerCase().includes(busca.toLowerCase());
+            const dataMatches = !dataSelecionada || dataItemNormalizada === dataSelecionadaNormalizada;
+            const buscaMatches = item.refeicao.toLowerCase().includes(busca.toLowerCase()) || item.titulo.toLowerCase().includes(busca.toLowerCase());
 
-        return dataMatches && buscaMatches;
-    });
+            return dataMatches && buscaMatches;
+        });
 
     const novosDados = () => setTipo("novo");
 
@@ -323,7 +334,7 @@ const Cardapio = () => {
 
     return (
         <AdminGuard>
-            <div className="container mx-auto p-4">
+            <div className="container mx-auto">
                 <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
                 <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
                 <button

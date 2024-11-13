@@ -10,57 +10,59 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faPlus, faMinus, faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 
 // Componente de Formulário para criar/editar cardápios
-const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => (
-    <div className="mb-6 p-4 bg-white rounded shadow-md relative">
-        <div className="flex flex-col">
-            <input
-                type="date"
-                name="txtData"
-                value={data}
-                onChange={(e) => setData(e.target.value)}
-                className="block w-full p-3 mt-2 border border-gray-300 rounded text-gray-700"
-                required
-            />
-            <input
-                type="text"
-                name="txtRefeicao"
-                placeholder="Refeição"
-                value={refeicao}
-                onChange={(e) => setRefeicao(e.target.value)}
-                className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
-                required
-            />
-            <input
-                type="text"
-                name="txtTitulo"
-                placeholder="Título"
-                value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
-                className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
-                required
-            />
-            <div className="mt-6 flex justify-end">
-                <button
-                    type="button"
-                    onClick={limparDados}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2"
-                >
-                    Cancelar
-                </button>
-                <button
-                    type="button"
-                    onClick={gravaDados}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                    {tipo === "novo" ? "Criar" : "Atualizar"}
-                </button>
+const CardapioForm = ({ tipo, data, refeicao, titulo, setData, setRefeicao, setTitulo, limparDados, gravaDados }) => {
+    return (
+        <div className="mb-6 p-4 bg-white rounded shadow-md relative">
+            <div className="flex flex-col">
+                <input
+                    type="date"
+                    name="txtData"
+                    value={data}
+                    onChange={(e) => setData(e.target.value)}
+                    className="block w-full p-3 mt-2 border border-gray-300 rounded text-gray-700"
+                    required
+                />
+                <input
+                    type="text"
+                    name="txtRefeicao"
+                    placeholder="Refeição"
+                    value={refeicao}
+                    onChange={(e) => setRefeicao(e.target.value)}
+                    className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+                    required
+                />
+                <input
+                    type="text"
+                    name="txtTitulo"
+                    placeholder="Título"
+                    value={titulo}
+                    onChange={(e) => setTitulo(e.target.value)}
+                    className="block w-full p-3 mt-4 border border-gray-300 rounded text-gray-700"
+                    required
+                />
+                <div className="mt-6 flex justify-end">
+                    <button
+                        type="button"
+                        onClick={limparDados}
+                        className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700 mr-2"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        onClick={gravaDados}
+                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    >
+                        {tipo === "novo" ? "Criar" : "Atualizar"}
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-);
+    );
+};
 
 // Componente de Item de Cardápio com exibição dos itens do cardápio
-const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }) => {
+const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes, fetchItens }) => {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isRmvModalOpen, setIsRmvModalOpen] = useState(false);
     const [isExpanded, setIsExpanded] = useState(false);
@@ -75,6 +77,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
 
     const handleAddModalClose = () => {
         setIsAddModalOpen(false);
+        fetchItens(item.id);
     };
 
     const handleRmvModalOpen = () => {
@@ -83,6 +86,7 @@ const CardapioItem = ({ item, editarDados, apagarDados, itens, mediaAvaliacoes }
 
     const handleRmvModalClose = () => {
         setIsRmvModalOpen(false);
+        fetchItens(item.id);
     };
 
     return (
@@ -183,7 +187,7 @@ const Cardapio = () => {
     const [refeicao, setRefeicao] = useState("");
     const [titulo, setTitulo] = useState("");
     const [itensPorCardapio, setItensPorCardapio] = useState({});
-    const [dataSelecionada, setDataSelecionada] = useState("");
+    const [filtroData, setFiltroData] = useState('');
     const [tipo, setTipo] = useState("");
     const [loading, setLoading] = useState(false);
     const [avaliacoes, setAvaliacoes] = useState([]);
@@ -193,23 +197,27 @@ const Cardapio = () => {
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
+        fetchCardapio();
+    }, [url]);
+
+    const fetchCardapio = async () => {
         setLoading(true);
         fetch(url + "cardapio")
             .then((response) => response.json())
             .then((data) => setCardapio(data))
             .catch((err) => console.log(err))
             .finally(() => setLoading(false));
-    }, [url]);
-
-    useEffect(() => {
-        cardapio.forEach(item => fetchItens(item.id));
-    }, [cardapio]);
+    }
 
     useEffect(() => {
         axios.get(url + "avaliacoes")
             .then(response => setAvaliacoes(response.data))
             .catch(err => console.log(err));
     }, []);
+
+    useEffect(() => {
+        cardapio.forEach(item => fetchItens(item.id));
+    }, [cardapio]);
 
     const fetchItens = async (cardapioId) => {
         try {
@@ -221,25 +229,19 @@ const Cardapio = () => {
         }
     };
 
-    // Função para normalizar a data e garantir o formato YYYY-MM-DD
     const normalizarData = (data) => {
         return new Date(data).toISOString().split('T')[0];
-        //return new Date(data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
     };
 
     // Ordena os cardápios por ID de forma decrescente e filtra pela data selecionada
     const cardapiosFiltrados = cardapio
-        .sort((a, b) => b.id - a.id) // Ordena por ID de forma decrescente
-        .filter((item) => {
-            // Normaliza a data e verifica a busca por refeição/título em um único filtro
-            const dataItemNormalizada = normalizarData(item.data);
-            const dataSelecionadaNormalizada = dataSelecionada ? normalizarData(dataSelecionada) : null;
-
-            const dataMatches = !dataSelecionada || dataItemNormalizada === dataSelecionadaNormalizada;
-            const buscaMatches = item.refeicao.toLowerCase().includes(busca.toLowerCase()) || item.titulo.toLowerCase().includes(busca.toLowerCase());
+        .filter((cardapio) => {
+            const dataMatches = !filtroData || normalizarData(cardapio.data) === normalizarData(filtroData);
+            const buscaMatches = cardapio.refeicao.toLowerCase().includes(busca.toLowerCase()) || cardapio.titulo.toLowerCase().includes(busca.toLowerCase());
 
             return dataMatches && buscaMatches;
-        });
+        })
+        .sort((a, b) => b.id - a.id);
 
     const novosDados = () => setTipo("novo");
 
@@ -259,6 +261,7 @@ const Cardapio = () => {
         setData(data);
         setRefeicao(refeicao);
         setTitulo(titulo);
+        scrollToTop();
     };
 
     // Função para excluir o cardápio e remover os itens relacionados
@@ -272,51 +275,28 @@ const Cardapio = () => {
             const response = await axios.get(urlAvaliado);
 
             if (response.data.foiAvaliado) {
-                // Se o cardápio já foi avaliado, exibir uma mensagem ao usuário e interromper o processo
                 setErrorMessage("Não é possível excluir este cardápio, pois ele já foi avaliado.");
-                return; // Interrompe a função
+                return;
             }
 
             // Se não houver avaliações, continuar com a exclusão
             // Primeiro, excluir todos os itens relacionados ao cardápio
             const urlItens = `${url}cardapio/${cardapioId}/itens`;
-            await axios.delete(urlItens); // Requisição DELETE para remover itens
+            await axios.delete(urlItens);
 
             // Depois de excluir os itens, excluir o cardápio
             const urlCardapio = `${url}cardapio/${cardapioId}`;
-            await axios.delete(urlCardapio); // Requisição DELETE para remover cardápio
+            await axios.delete(urlCardapio);
 
             // Atualizar a lista de cardápios no frontend após a exclusão
-            setCardapio((prevCardapios) => prevCardapios.filter(item => item.id !== cardapioId));
+            //setCardapio((prevCardapios) => prevCardapios.filter(item => item.id !== cardapioId));
+            fetchCardapio();
 
             setSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
         } catch (error) {
             setErrorMessage("Erro ao remover o cardápio e seus itens:");
         }
     };
-
-    // const apagarDados = async (cardapioId) => {
-    //     setErrorMessage("");
-    //     setSuccessMessage("");
-    
-    //     try {
-    //         const urlAvaliado = `${url}cardapio/${cardapioId}/avaliado`;
-    //         const response = await axios.get(urlAvaliado);
-    
-    //         if (response.data.foiAvaliado) {
-    //             setErrorMessage("Não é possível excluir este cardápio, pois ele já foi avaliado.");
-    //             return;
-    //         }
-    
-    //         await axios.delete(`${url}cardapio/${cardapioId}/itens`);
-    //         await axios.delete(`${url}cardapio/${cardapioId}`);
-    
-    //         setCardapio(prevCardapios => prevCardapios.filter(item => item.id !== cardapioId));
-    //         setSuccessMessage("Cardápio e seus itens foram removidos com sucesso!");
-    //     } catch (error) {
-    //         setErrorMessage("Erro ao remover o cardápio e seus itens.");
-    //     }
-    // };
 
     const gravaDados = () => {
         if (data && refeicao && titulo) {
@@ -330,37 +310,15 @@ const Cardapio = () => {
                     .catch((err) => console.log(err));
             }
         } else {
-            console.log("Preencha os campos");
+            setErrorMessage("Preencha os campos");
         }
     };
-
-    // const gravaDados = async () => {
-    //     if (data && refeicao && titulo) {
-    //         try {
-    //             let response;
-    //             if (tipo === "novo") {
-    //                 response = await axios.post(`${url}cardapio`, { data, refeicao, titulo });
-    //                 setCardapio(prevCardapios => [...prevCardapios, response.data]);
-    //                 setSuccessMessage("Cardápio criado com sucesso!");
-    //             } else if (tipo === "editar") {
-    //                 response = await axios.put(`${url}cardapio/${id}`, { id, data, refeicao, titulo });
-    //                 setCardapio(prevCardapios => prevCardapios.map(item => item.id === id ? response.data : item));
-    //                 setSuccessMessage("Cardápio atualizado com sucesso!");
-    //             }
-    //             limparDados();
-    //         } catch (err) {
-    //             setErrorMessage("Erro ao salvar cardápio.");
-    //         }
-    //     } else {
-    //         setErrorMessage("Preencha todos os campos.");
-    //     }
-    // };
 
     const atualizaListaComNovoCardapio = (response) => {
         const novoCardapio = response.data;
         setCardapio([...cardapio, novoCardapio]);
         limparDados();
-        router.reload();
+        fetchCardapio();
     };
 
     const atualizaListaCardapioEditado = (response) => {
@@ -368,7 +326,7 @@ const Cardapio = () => {
         const cardapiosAtualizados = cardapio.map(item => item.id === cardapioEditado.id ? cardapioEditado : item);
         setCardapio(cardapiosAtualizados);
         limparDados();
-        router.reload();
+        fetchCardapio();
     };
 
     const calcularMediaAvaliacoes = (cardapioId) => {
@@ -376,6 +334,13 @@ const Cardapio = () => {
         if (avaliacoesDoCardapio.length === 0) return "Sem avaliações"; // Caso não tenha avaliações
         const totalPontuacao = avaliacoesDoCardapio.reduce((acc, avaliacao) => acc + avaliacao.pontuacao, 0);
         return (totalPontuacao / avaliacoesDoCardapio.length).toFixed(2); // Média com duas casas decimais
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     };
 
     return (
@@ -409,10 +374,9 @@ const Cardapio = () => {
                     </label>
                     <div className="flex flex-col md:flex-row items-center md:space-x-4 space-y-3 md:space-y-0">
                         <input
-                            id="datePicker"
                             type="date"
-                            value={dataSelecionada}
-                            onChange={(e) => setDataSelecionada(e.target.value)}
+                            value={filtroData}
+                            onChange={(e) => setFiltroData(e.target.value)}
                             className="w-full md:w-auto border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                         />
                         <input
@@ -437,6 +401,7 @@ const Cardapio = () => {
                                 apagarDados={apagarDados}
                                 itens={itensPorCardapio[item.id]}
                                 mediaAvaliacoes={calcularMediaAvaliacoes}
+                                fetchItens={fetchItens}
                             />
                         ))
                     ) : (

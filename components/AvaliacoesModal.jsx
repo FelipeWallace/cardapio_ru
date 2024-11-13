@@ -73,12 +73,24 @@ const AvaliacoesModal = ({ cardapioId, userId, onClose }) => {
                     <label className="block text-gray-700 font-semibold">Pontuação:</label>
                     <StarRating rating={pontuacao} setRating={setPontuacao} />
                 </div>
-                <textarea
+                {/* <textarea
                     value={comentario}
                     onChange={(e) => setComentario(e.target.value)}
                     placeholder="Comentário"
                     className="border border-gray-300 p-2 rounded w-full mb-2"
-                />
+                /> */}
+                <select
+                    value={comentario}
+                    onChange={(e) => setComentario(e.target.value)}
+                    className="border border-gray-300 p-2 rounded w-full mb-2"
+                >
+                    <option value="" disabled>Selecione um comentário</option>
+                    <option value="Muito satisfeito">Muito satisfeito</option>
+                    <option value="Satisfeito">Satisfeito</option>
+                    <option value="Indiferente">Indiferente</option>
+                    <option value="Insatisfeito">Insatisfeito</option>
+                    <option value="Muito insatisfeito">Muito insatisfeito</option>
+                </select>
                 <button
                     type="button"
                     onClick={handleSubmit}

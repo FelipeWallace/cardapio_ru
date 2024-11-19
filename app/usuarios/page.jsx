@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminGuard from "@components/AdminGuard";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -14,6 +14,7 @@ const Usuarios = () => {
     const [foto, setFoto] = useState("");
     const [perfil, setPerfil] = useState("");
     const [filtroNome, setFiltroNome] = useState('');
+    const [mediasAvaliacoes, setMediasAvaliacoes] = useState({});
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
@@ -81,6 +82,38 @@ const Usuarios = () => {
     const usuariosFiltrados = usuarios.filter((usuario) => {
         return usuario.nome.toLowerCase().includes(filtroNome.toLowerCase());
     });
+
+    useEffect(() => {
+        const fetchMedias = async () => {
+            const novasMedias = {};
+            for (const usuario of usuariosFiltrados) {
+                try {
+                    const response = await axios.get(`${url}usuario/${usuario.id}/avaliacoes`);
+                    console.log(`Status da requisição para usuário ${usuario.id}: ${response.status}`);
+                    
+                    const avaliacoesUsuario = response.data;
+    
+                    if (avaliacoesUsuario.length > 0) {
+                        const totalPontuacao = avaliacoesUsuario.reduce((acc, avaliacao) => acc + avaliacao.pontuacao, 0);
+                        novasMedias[usuario.id] = (totalPontuacao / avaliacoesUsuario.length).toFixed(2);
+                    } else {
+                        novasMedias[usuario.id] = "Sem avaliações";
+                    }
+                } catch (error) {
+                    if (error.response) {
+                        console.error(`Erro ao buscar avaliações do usuário ${usuario.id}: Status ${error.response.status}`);
+                    } else {
+                        console.error(`Erro ao buscar avaliações do usuário ${usuario.id}:`, error.message);
+                    }
+                    novasMedias[usuario.id] = `${error.message}`;
+                }
+            }
+            setMediasAvaliacoes(novasMedias);
+        };
+    
+        fetchMedias();
+    }, [usuariosFiltrados, url]);
+    
 
     return (
         <AdminGuard>
@@ -170,6 +203,11 @@ const Usuarios = () => {
                                 >
                                     <FontAwesomeIcon icon={faTrashAlt} />
                                 </button> */}
+                            </div>
+                            <div className="flex items-center">
+                                <span className="text-gray-600 text-sm font-medium">
+                                    Média de Avaliações: {mediasAvaliacoes[usuario.id] || "Carregando..."}
+                                </span>
                             </div>
                         </li>
                     ))}

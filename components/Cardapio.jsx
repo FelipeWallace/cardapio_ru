@@ -170,8 +170,8 @@ const Cardapio = ({ today, setToday }) => {
     };
 
     const normalizarData = (data) => {
-        // return new Date(data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-        return new Date(data).toISOString().split('T')[0];
+        return new Date(data).toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+        // return new Date(data).toISOString().split('T')[0];
     };
 
     // Função para avançar um dia

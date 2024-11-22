@@ -118,13 +118,6 @@ const Avisos = () => {
     })
     .sort((a, b) => new Date(b.data) - new Date(a.data));
 
-  // Teste para formatar a data
-  const formatarData = (data) => {
-    data = data.split('T')[0];
-    const [ano, mes, dia] = data.split('-');
-    return `${dia}/${mes}/${ano}`;
-  };
-
   return (
     <AdminGuard>
       <div className="p-4 max-w-4xl mx-auto bg-gray-100 rounded-lg shadow-md">
@@ -248,8 +241,7 @@ const Avisos = () => {
               <div className="mb-8">
                 <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
                 <p className="font-semibold text-gray-600">{aviso.aviso}</p>
-                <p className="text-gray-400 text-sm">{`Publicação em: ${formatarData(aviso.data)}`}</p>
-                {/* <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}</p> */}
+                <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC'})}`}</p>
               </div>
               <div className="absolute bottom-4 right-4 flex space-x-4">
                 <button onClick={() => handleEdit(aviso)} className="text-blue-500 hover:text-blue-700">

@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AdminGuard from "@components/AdminGuard";
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Usuarios = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -63,13 +63,13 @@ const Usuarios = () => {
     //         .catch((err) => console.log(err));
     // };
 
-    // const handleEdit = (usuario) => {
-    //     setId(usuario.id);
-    //     setNome(usuario.nome);
-    //     setEmail(usuario.email);
-    //     setFoto(usuario.foto);
-    //     setPerfil(usuario.perfil);
-    // };
+    const handleEdit = (usuario) => {
+        setId(usuario.id);
+        setNome(usuario.nome);
+        setEmail(usuario.email);
+        setFoto(usuario.foto);
+        setPerfil(usuario.perfil);
+    };
 
     const resetForm = () => {
         setId("");
@@ -90,9 +90,9 @@ const Usuarios = () => {
                 try {
                     const response = await axios.get(`${url}usuario/${usuario.id}/avaliacoes`);
                     console.log(`Status da requisição para usuário ${usuario.id}: ${response.status}`);
-                    
+
                     const avaliacoesUsuario = response.data;
-    
+
                     if (avaliacoesUsuario.length > 0) {
                         const totalPontuacao = avaliacoesUsuario.reduce((acc, avaliacao) => acc + avaliacao.pontuacao, 0);
                         novasMedias[usuario.id] = (totalPontuacao / avaliacoesUsuario.length).toFixed(2);
@@ -105,15 +105,15 @@ const Usuarios = () => {
                     } else {
                         console.error(`Erro ao buscar avaliações do usuário ${usuario.id}:`, error.message);
                     }
-                    novasMedias[usuario.id] = `${error.message}`;
+                    novasMedias[usuario.id] = "Sem avaliações";
                 }
             }
             setMediasAvaliacoes(novasMedias);
         };
-    
+
         fetchMedias();
     }, [usuariosFiltrados, url]);
-    
+
 
     return (
         <AdminGuard>
@@ -187,27 +187,28 @@ const Usuarios = () => {
                                             <span className="text-red-500 ml-1">- Administrador</span>
                                         )}
                                     </strong>
-                                    <p className="text-gray-500 truncate">{usuario.id} - {usuario.email}</p>
+                                    <p className="text-gray-500 truncate">{usuario.email}</p>
                                 </div>
                             </div>
+                            <div className="flex items-center">
+                                <span className="text-gray-600 text-sm font-medium">
+                                    {(mediasAvaliacoes[usuario.id] === "Sem avaliações") ? "Sem avaliações"
+                                        : `Média de Avaliações: ${mediasAvaliacoes[usuario.id]}`}
+                                </span>
+                            </div>
                             <div className="flex space-x-4">
-                                {/* <button
+                                <button
                                     onClick={() => handleEdit(usuario)}
                                     className="text-blue-500 hover:text-blue-700"
                                 >
                                     <FontAwesomeIcon icon={faEdit} />
                                 </button>
-                                <button
+                                {/* <button
                                     onClick={() => handleDelete(usuario.id)}
                                     className="text-red-500 hover:text-red-700"
                                 >
                                     <FontAwesomeIcon icon={faTrashAlt} />
                                 </button> */}
-                            </div>
-                            <div className="flex items-center">
-                                <span className="text-gray-600 text-sm font-medium">
-                                    Média de Avaliações: {mediasAvaliacoes[usuario.id] || "Carregando..."}
-                                </span>
                             </div>
                         </li>
                     ))}

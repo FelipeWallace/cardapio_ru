@@ -304,10 +304,12 @@ const Cardapio = () => {
                 axios.post(url + "cardapio", { data, refeicao, titulo })
                     .then((response) => atualizaListaComNovoCardapio(response))
                     .catch((err) => console.log(err));
+                setSuccessMessage("Cardápio criado com sucesso!");
             } else if (tipo === "editar") {
                 axios.put(url + "cardapio/" + id, { id, data, refeicao, titulo })
                     .then((response) => atualizaListaCardapioEditado(response))
                     .catch((err) => console.log(err));
+                setSuccessMessage("Cardápio editado com sucesso!");
             }
         } else {
             setErrorMessage("Preencha os campos");

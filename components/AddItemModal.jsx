@@ -30,11 +30,6 @@ const AddItemModal = ({ cardapioId, onClose }) => {
         }
     }, [cardapioId]);
 
-    // Filtro para excluir itens já presentes no cardápio
-    // const itensFiltrados = itens.filter(item =>
-    //     !itensNoCardapio.some(cardapioItem => cardapioItem.id === item.id)
-    // );
-
     const itensFiltrados = itens
     .filter(item =>
         !itensNoCardapio.some(cardapioItem => cardapioItem.id === item.id)

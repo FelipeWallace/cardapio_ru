@@ -3,10 +3,13 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import Notification from './Notification';
 
 const RemoveItemModal = ({ cardapioId, onClose }) => {
     const [itens, setItens] = useState([]);
     const [filtroNome, setFiltroNome] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const url = process.env.NEXT_PUBLIC_API_URL;
 
     useEffect(() => {
@@ -24,10 +27,11 @@ const RemoveItemModal = ({ cardapioId, onClose }) => {
         })
             .then((response) => response.json())
             .then((data) => {
-                // alert(data.message);
+                setSuccessMessage(data.message);
                 setItens(itens.filter((item) => item.id !== itemId));
             })
-            .catch((error) => console.error("Erro ao remover item do cardápio:", error));
+            .catch((error) => setErrorMessage("Erro ao remover item do cardápio:", error));
+
     };
 
     const itensFiltrados = itens.filter((item) => {
@@ -36,6 +40,10 @@ const RemoveItemModal = ({ cardapioId, onClose }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+
+            <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
+            <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
+
             <div className="bg-white p-6 rounded shadow-lg max-w-lg w-full">
                 <h2 className="text-xl font-bold mb-4">Remover Itens do Cardápio</h2>
                 

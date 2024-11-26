@@ -85,9 +85,13 @@
   @apply rounded-full border border-black bg-transparent py-1.5 px-5 text-black transition-all hover:bg-black hover:text-white text-center text-sm font-inter flex items-center justify-center;
 }
 
-.head_text {
+/* .head_text {
   @apply mt-5 text-5xl font-extrabold leading-[1.15] text-black sm:text-6xl;
+} */
+.head_text {
+  @apply text-4xl font-extrabold leading-[1.2] text-black sm:text-5xl md:text-6xl mt-5;
 }
+
 
 .orange_gradient {
   @apply bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent;

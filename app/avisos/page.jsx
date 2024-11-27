@@ -120,7 +120,7 @@ const Avisos = () => {
 
   return (
     <AdminGuard>
-      <div className="p-4 max-w-4xl mx-auto bg-gray-100 rounded-lg shadow-md">
+      <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
         <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
         <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
 

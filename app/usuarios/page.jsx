@@ -117,7 +117,7 @@ const Usuarios = () => {
 
     return (
         <AdminGuard>
-            <div className="p-4 max-w-4xl mx-auto bg-gray-100 rounded-lg shadow-md">
+            <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
                 {/* Formulário de Usuários */}
                 <h2 className="text-2xl font-bold mb-4 text-center">Usuários</h2>
                 <form onSubmit={handleSubmit} className="mb-4 bg-gray-100 p-4 rounded-lg shadow-md">

@@ -73,8 +73,8 @@ const Item = () => {
             setSuccessMessage('Item excluído com sucesso!');
             fetchItens();
         } catch (error) {
-            console.error('Erro ao deletar item:', error);
-            setErrorMessage('Erro ao deletar item:', error);
+            console.error('Erro ao deletar item', error);
+            setErrorMessage('Erro ao deletar item', error);
         }
 
     };
@@ -92,7 +92,7 @@ const Item = () => {
 
     return (
         <AdminGuard>
-            <div className="p-4 mx-auto bg-gray-100 rounded-lg shadow-md 
+            <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md 
                 sm:max-w-sm 
                 md:max-w-md 
                 lg:max-w-2xl 

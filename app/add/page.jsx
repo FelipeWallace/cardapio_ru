@@ -97,9 +97,7 @@ export default function AdicionarItemAoCardapio() {
                 <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage("")} />
 
                 <div>
-                    <label htmlFor="cardapioSelect" className="block text-lg font-medium text-gray-700 mb-2">
-                        Selecione um cardápio:
-                    </label>
+                    <h2 className="text-xl font-bold mb-4">Selecionar Cardápio</h2>
                     <input
                         type="text"
                         placeholder="Busque por data, título ou refeição"
@@ -173,13 +171,15 @@ export default function AdicionarItemAoCardapio() {
                 )}
 
 
-                <button
-                    type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded w-full"
-                    onClick={handleSubmit}
-                >
-                    Adicionar Itens ao Cardápio
-                </button>
+                {selectedCardapio && selectedItems.size > 0 && (
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white px-4 py-2 rounded w-full"
+                        onClick={handleSubmit}
+                    >
+                        Adicionar Itens ao Cardápio
+                    </button>
+                )}
             </div>
         </AdminGuard>
     );

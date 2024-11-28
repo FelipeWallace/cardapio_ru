@@ -120,55 +120,68 @@ const Avisos = () => {
 
   return (
     <AdminGuard>
-      <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
+      <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md 
+        sm:max-w-sm 
+        md:max-w-md 
+        lg:max-w-2xl 
+        xl:max-w-4xl"
+      >
         <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
         <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} />
 
         <h2 className="text-2xl font-bold mb-4 text-center">Avisos</h2>
 
+
         {/* Filtros de Avisos */}
-        <div className="mb-4 flex space-x-4 items-center">
-          {/* Dropdown de Tipo com ícone de filtro */}
-          <div className="relative">
-            <FontAwesomeIcon icon={faFilter} className="absolute left-3 top-3 text-gray-400" />
-            <select
-              value={filtroTipo}
-              onChange={(e) => setFiltroTipo(e.target.value)}
-              className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
-            >
-              <option value="">Filtrar por tipo</option>
-              <option value="Importante">Importante</option>
-              <option value="Urgente">Urgente</option>
-              <option value="Informação">Informação</option>
-              <option value="Alerta">Alerta</option>
-              <option value="Promoção">Promoção</option>
-            </select>
-          </div>
+        <div className="mb-6">
+          {/* Título dos Filtros */}
+          <h2 className="text-lg text-center font-semibold text-gray-700 mb-4">Filtre por tipo e datas de inicio e fim</h2>
 
-          {/* Campo de Data Início com ícone de calendário */}
-          <div className="relative">
-            <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="date"
-              value={filtroDataInicio}
-              onChange={(e) => setFiltroDataInicio(e.target.value)}
-              className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Data Início"
-            />
-          </div>
+          {/* Filtros */}
+          <div className="flex flex-col sm:flex-row sm:space-x-4 items-center justify-center">
+            {/* Dropdown de Tipo com ícone de filtro */}
+            <div className="relative w-full sm:w-auto mb-4 sm:mb-0">
+              <FontAwesomeIcon icon={faFilter} className="absolute left-3 top-3 text-gray-400" />
+              <select
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+                className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+              >
+                <option value="">Filtrar por tipo</option>
+                <option value="Importante">Importante</option>
+                <option value="Urgente">Urgente</option>
+                <option value="Informação">Informação</option>
+                <option value="Alerta">Alerta</option>
+                <option value="Promoção">Promoção</option>
+              </select>
+            </div>
 
-          {/* Campo de Data Fim com ícone de calendário */}
-          <div className="relative">
-            <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
-            <input
-              type="date"
-              value={filtroDataFim}
-              onChange={(e) => setFiltroDataFim(e.target.value)}
-              className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
-              placeholder="Data Fim"
-            />
+            {/* Campo de Data Início com ícone de calendário */}
+            <div className="relative w-full sm:w-auto mb-4 sm:mb-0">
+              <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="date"
+                value={filtroDataInicio}
+                onChange={(e) => setFiltroDataInicio(e.target.value)}
+                className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                placeholder="Data Início"
+              />
+            </div>
+
+            {/* Campo de Data Fim com ícone de calendário */}
+            <div className="relative w-full sm:w-auto">
+              <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+              <input
+                type="date"
+                value={filtroDataFim}
+                onChange={(e) => setFiltroDataFim(e.target.value)}
+                className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                placeholder="Data Fim"
+              />
+            </div>
           </div>
         </div>
+
 
         {/* Botão para abrir o formulário de criação */}
         <button
@@ -241,7 +254,7 @@ const Avisos = () => {
               <div className="mb-8">
                 <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
                 <p className="font-semibold text-gray-600">{aviso.aviso}</p>
-                <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC'})}`}</p>
+                <p className="text-gray-400 text-sm">{`Publicação em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}</p>
               </div>
               <div className="absolute bottom-4 right-4 flex space-x-4">
                 <button onClick={() => handleEdit(aviso)} className="text-blue-500 hover:text-blue-700">

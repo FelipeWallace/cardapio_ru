@@ -151,7 +151,7 @@ const Avaliacoes = () => {
     // };
 
     // Ordena as avaliações pela data em ordem decrescente
-    
+
     const sortedAvaliacoes = avaliacoes
         .filter((avaliacao) => {
             return (
@@ -169,8 +169,12 @@ const Avaliacoes = () => {
 
     return (
         <AdminGuard>
-            <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
-
+            <div className="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md
+                sm:max-w-sm 
+                md:max-w-md 
+                lg:max-w-2xl 
+                xl:max-w-4xl"
+            >
                 {/* <Notification message={errorMessage} type="error" clearMessage={() => setErrorMessage('')} />
                 <Notification message={successMessage} type="success" clearMessage={() => setSuccessMessage('')} /> */}
 
@@ -207,28 +211,35 @@ const Avaliacoes = () => {
                         {id ? "Atualizar Avaliação" : "Adicionar Avaliação"}
                     </button>
                 </div> */}
-                <div className="mb-4 flex space-x-4 items-center">
-                    <div className="relative">
-                        <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
-                        <input
-                            type="date"
-                            value={filtroDataInicio}
-                            onChange={(e) => setFiltroDataInicio(e.target.value)}
-                            className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
-                            placeholder="Data Início"
-                        />
-                    </div>
-                    <div className="relative">
-                        <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
-                        <input
-                            type="date"
-                            value={filtroDataFim}
-                            onChange={(e) => setFiltroDataFim(e.target.value)}
-                            className="border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
-                            placeholder="Data Fim"
-                        />
+                <div className="mb-6">
+                    {/* Título dos Filtros */}
+                    <h2 className="text-lg text-center font-semibold text-gray-700 mb-4">Filtre por data de inicio e fim</h2>
+
+                    {/* Filtros */}
+                    <div className="flex flex-col sm:flex-row sm:space-x-4 items-center justify-center">
+                        <div className="relative w-full sm:w-auto mb-4 sm:mb-0">
+                            <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+                            <input
+                                type="date"
+                                value={filtroDataInicio}
+                                onChange={(e) => setFiltroDataInicio(e.target.value)}
+                                className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Data Início"
+                            />
+                        </div>
+                        <div className="relative w-full sm:w-auto">
+                            <FontAwesomeIcon icon={faCalendarAlt} className="absolute left-3 top-3 text-gray-400" />
+                            <input
+                                type="date"
+                                value={filtroDataFim}
+                                onChange={(e) => setFiltroDataFim(e.target.value)}
+                                className="w-full border border-gray-300 pl-10 pr-4 py-2 rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Data Fim"
+                            />
+                        </div>
                     </div>
                 </div>
+
                 <ul className="list-none space-y-4">
                     {sortedAvaliacoes.map((avaliacao) => (
                         <li

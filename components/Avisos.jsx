@@ -122,7 +122,7 @@ const Avisos = () => {
 
 
             {/* Lista de avisos expansível */}
-            {isExpanded && (
+            {/* {isExpanded && (
                 <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-40">
                     <h3 className="text-lg font-semibold p-4 bg-gray-100 border-b">Avisos</h3>
                     <ul className="list-none space-y-4 p-4 max-h-64 overflow-y-auto">
@@ -148,7 +148,77 @@ const Avisos = () => {
                         )}
                     </ul>
                 </div>
+            )} */}
+            {/* Dropdown ou Modal de Avisos */}
+            {isExpanded && (
+                <>
+                    {/* Exibição em telas maiores (Dropdown) */}
+                    <div className="hidden sm:block absolute right-0 mt-2 w-80 bg-white border border-gray-300 rounded-lg shadow-lg z-40">
+                        <h3 className="text-lg font-semibold p-4 bg-gray-100 border-b">Avisos</h3>
+                        <ul className="list-none space-y-4 p-4 max-h-64 overflow-y-auto">
+                            {avisosRecentes.length > 0 ? (
+                                avisosRecentes
+                                    .sort((a, b) => new Date(b.data) - new Date(a.data))
+                                    .map((aviso) => (
+                                        <li
+                                            key={aviso.id}
+                                            className={`mb-2 flex justify-between items-center p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out ${getBackgroundColor(
+                                                aviso.tipo
+                                            )}`}
+                                        >
+                                            <div>
+                                                <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
+                                                <p className="font-semibold text-gray-600">{aviso.aviso}</p>
+                                                <p className="text-gray-400 text-sm">{`Publicado em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}</p>
+                                            </div>
+                                        </li>
+                                    ))
+                            ) : (
+                                <p className="text-gray-500">Nenhum aviso recente.</p>
+                            )}
+                        </ul>
+                    </div>
+
+                    {/* Exibição em telas menores (Modal) */}
+                    <div className="sm:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+                        <div className="bg-white w-11/12 max-w-md rounded-lg shadow-lg">
+                            <div className="flex justify-between items-center p-4 bg-gray-100 border-b">
+                                <h3 className="text-lg font-semibold">Avisos</h3>
+                                <button
+                                    onClick={() => setIsExpanded(false)}
+                                    className="text-gray-500 hover:text-gray-700"
+                                >
+                                    <FontAwesomeIcon icon={faTimes} />
+                                </button>
+                            </div>
+                            <ul className="list-none space-y-4 p-4 max-h-64 overflow-y-auto">
+                                {avisosRecentes.length > 0 ? (
+                                    avisosRecentes
+                                        .sort((a, b) => new Date(b.data) - new Date(a.data))
+                                        .map((aviso) => (
+                                            <li
+                                                key={aviso.id}
+                                                className={`mb-2 flex justify-between items-center p-4 rounded-lg shadow hover:bg-gray-50 transition duration-300 ease-in-out ${getBackgroundColor(
+                                                    aviso.tipo
+                                                )}`}
+                                            >
+                                                <div>
+                                                    <strong className="text-lg font-semibold text-gray-700">{aviso.tipo}</strong>
+                                                    <p className="font-semibold text-gray-600">{aviso.aviso}</p>
+                                                    <p className="text-gray-400 text-sm">{`Publicado em: ${new Date(aviso.data).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}`}</p>
+                                                </div>
+                                            </li>
+                                        ))
+                                ) : (
+                                    <p className="text-gray-500">Nenhum aviso recente.</p>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
+
+                </>
             )}
+
 
             {/* Modal para avisos urgentes */}
             {showPopup && urgentAviso && (

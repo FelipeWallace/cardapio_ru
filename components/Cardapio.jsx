@@ -59,18 +59,9 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
     return (
         <>
             <div key={item.id} id="cardapioDiv" className="mt-6 mb-6 p-6 bg-white rounded-lg shadow-lg transition hover:shadow-xl transform hover:scale-105 duration-300 space-x-6">
-                <div className="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 className="text-lg font-bold text-gray-800">
-                            {item.refeicao} - {item.titulo}
-                        </h3>
-                        <p className="text-sm text-gray-500">
-                            {`Média de Avaliações: `}
-                            <span className="text-orange-500 font-bold">{mediaAvaliacoes(item.id)}</span>
-                        </p>
-                    </div>
-
-                    <div className="flex space-x-4 ml-auto">
+                <div className="mb-4 flex flex-col">
+                    {/* Botões à direita */}
+                    <div className="flex justify-end mb-2">
                         {session && ( // Renderiza o botão apenas se o usuário estiver logado
                             <button
                                 onClick={() => handleAvaliarClick(item.id)}
@@ -81,13 +72,26 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
                         )}
                         <button
                             onClick={handleShareImage}
-                            className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center space-x-2"
+                            className="bg-green-600 text-white px-4 py-2 ml-2 rounded-md hover:bg-green-500 transition-colors duration-300 flex items-center space-x-2"
                         >
                             <FontAwesomeIcon icon={faShareAlt} />
                             {/* <span>Compartilhar</span> */}
                         </button>
                     </div>
+
+                    {/* Título e média de avaliações */}
+                    <div>
+                        <h3 className="text-lg font-bold text-gray-800">
+                            {item.refeicao} - {item.titulo}
+                        </h3>
+                        <p className="text-sm text-gray-500">
+                            {`Média de Avaliações: `}
+                            <span className="text-orange-500 font-bold">{mediaAvaliacoes(item.id)}</span>
+                        </p>
+                    </div>
                 </div>
+
+
                 {itens && itens.length > 0 ? (
                     <ul className="ml-4 list-disc space-y-4">
                         {itens.map(subItem => (
@@ -96,7 +100,7 @@ const CardapioItem = ({ item, itens, handleAvaliarClick, mediaAvaliacoes, sessio
                                 <img
                                     src={subItem.imagem_url ? subItem.imagem_url : "https://i.ibb.co/pbcBmrY/ae65dba955ffbad623f51d2fae50d7e4.jpg"}
                                     alt={subItem.nome}
-                                    className="object-cover rounded w-20 h-20 transition duration-300 ease-in-out transform hover:scale-110"
+                                    className="object-cover rounded w-16 h-16 md:w-20 md:h-20 transition duration-300 ease-in-out transform hover:scale-110"
                                 />
                                 {/* Nome e descrição à direita */}
                                 <div className="flex flex-col">

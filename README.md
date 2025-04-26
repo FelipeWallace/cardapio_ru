@@ -4,7 +4,7 @@
 📄 [Clique aqui para acessar a monografia](./TCC2.pdf)
 
 - Visite o sistema em produção [aqui](https://cardapio-ru.vercel.app/).
-- Visite o repositório da API [aqui](https://github.com/FelipeWallace/RestauranteAPI).
+- Visite o repositório da API [aqui](https://github.com/FelipeWallace/RU-API).
 
 Este front-end foi desenvolvido para oferecer uma interface interativa e responsiva que permite aos usuários visualizar o cardápio do dia, avaliar refeições e acessar informações do Restaurante Universitário.  
 
